@@ -5,18 +5,26 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build --config vite.prod.config.js",
+    "build:controller": "vite build --config vite.controller.config.js",
+    "build:all": "npm run build && npm run build:controller",
+    "preview": "vite preview --config vite.prod.config.js --outDir dist/site",
+    "preview:controller": "vite preview --config vite.controller.config.js --outDir dist/controller",
+    "export-defaults": "npx tsx scripts/export-defaults.js",
+    "seed": "node scripts/seed.js"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.4.2",
     "@types/three": "^0.182.0",
+    "@upstash/redis": "^1.38.4",
+    "@vercel/blob": "^2.8.0",
     "framer-motion": "^12.23.26",
     "lenis": "^1.3.16",
     "lucide-react": "^0.562.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-router-dom": "^7.18.3",
     "three": "^0.182.0"
   },
   "devDependencies": {

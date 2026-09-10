@@ -1,0 +1,289 @@
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
+import type { SiteContent } from '../content/types';
+import defaultContent from '../content/defaultContent';
+
+// ── Config ────────────────────────────────────────────────────
+const STORAGE_KEY = 'bunny-cms-content';
+const MAX_UNDO = 10;
+const POLL_INTERVAL_MS = 30_000; // 30 seconds
+
+// API base URL injected at build time. Empty string = no API → fall back to localStorage (dev without Vercel).
+const API_BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? '';
+const USE_API = API_BASE.length > 0;
+
+// Controller secret — only needed by the controller build; undefined on the site build.
+const API_SECRET = (import.meta.env.VITE_CONTROLLER_API_SECRET as string | undefined) ?? '';
+
+// ── Merge helper ─────────────────────────────────────────────
+function mergeContent(saved: Partial<SiteContent>): SiteContent {
+  const merged: SiteContent = { ...defaultContent };
+  (Object.keys(saved) as Array<keyof SiteContent>).forEach((key) => {
+    if (saved[key] !== undefined) {
+      // @ts-ignore — dynamic key merge
+      merged[key] = { ...defaultContent[key], ...saved[key] };
+    }
+  });
+  return merged;
+}
+
+// ── API helpers ───────────────────────────────────────────────
+async function apiFetchContent(): Promise<SiteContent> {
+  const res = await fetch(`${API_BASE}/api/content`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`GET /api/content → ${res.status}`);
+  const json = await res.json();
+  // If Redis is empty (fresh deployment before seed), return defaultContent
+  if (!json || Object.keys(json).length === 0) return defaultContent;
+  return mergeContent(json as Partial<SiteContent>);
+}
+
+async function apiPatchContent(patch: Partial<SiteContent>): Promise<SiteContent> {
+  const res = await fetch(`${API_BASE}/api/content`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${API_SECRET}`,
+    },
+    body: JSON.stringify(patch),
+    cache: 'no-store',
+  });
+  if (!res.ok) throw new Error(`PATCH /api/content → ${res.status}`);
+  const json = await res.json();
+  return mergeContent(json as Partial<SiteContent>);
+}
+
+// ── localStorage helpers (dev fallback when USE_API=false) ────
+function lsPersist(next: SiteContent) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* quota */ }
+}
+
+function lsRead(): SiteContent {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return mergeContent(JSON.parse(raw) as Partial<SiteContent>);
+  } catch { /* corrupt */ }
+  return defaultContent;
+}
+
+// ── Context type ─────────────────────────────────────────────
+export interface ContentContextValue {
+  content: SiteContent;
+  /** Set full content + push undo. In API mode: also PATCHes the API. */
+  setContent: (next: SiteContent) => Promise<void>;
+  /**
+   * Patch one top-level section locally (instant for UI feedback).
+   * In dev/localStorage mode: also writes to localStorage for iframe sync.
+   * In API mode: does NOT call the API — use setContent (Save) for that.
+   */
+  patchContent: <K extends keyof SiteContent>(key: K, sectionData: Partial<SiteContent[K]>) => void;
+  resetToDefault: () => Promise<void>;
+  undoStack: SiteContent[];
+  canUndo: boolean;
+  undo: () => void;
+  /** true while the initial fetch is in progress */
+  isLoading: boolean;
+  /** true while a PATCH/save is in progress */
+  isSaving: boolean;
+  /** last error from an API call, null if none */
+  lastError: string | null;
+  clearError: () => void;
+}
+
+const ContentContext = createContext<ContentContextValue | null>(null);
+
+// ── Provider ─────────────────────────────────────────────────
+export function ContentProvider({
+  children,
+  mode = 'site',
+}: {
+  children: React.ReactNode;
+  /**
+   * 'site'       → read-only: fetches on mount + polls + re-fetches on tab focus.
+   *                Listens for postMessage from controller iframe after a save.
+   * 'controller' → read/write: fetches on mount, PATCHes API on setContent.
+   *                In localStorage mode: also writes for iframe sync.
+   * 'dev'        → Both behaviors; used in dev when both routes share one provider.
+   *                Defaults to 'controller' behavior so the controller route has write access.
+   */
+  mode?: 'site' | 'controller' | 'dev';
+}) {
+  const [content, setContentState] = useState<SiteContent>(defaultContent);
+  const [undoStack, setUndoStack] = useState<SiteContent[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastError, setLastError] = useState<string | null>(null);
+  const contentRef = useRef(content);
+
+  useEffect(() => { contentRef.current = content; }, [content]);
+
+  // ── Initial load ─────────────────────────────────────────────
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      setIsLoading(true);
+      try {
+        let loaded: SiteContent;
+        if (USE_API) {
+          loaded = await apiFetchContent();
+          // In controller mode, also write to localStorage so the dev preview iframe can pick it up
+          if (mode !== 'site') lsPersist(loaded);
+        } else {
+          loaded = lsRead();
+        }
+        if (!cancelled) setContentState(loaded);
+      } catch (err: any) {
+        if (!cancelled) {
+          console.error('[ContentProvider] initial load failed:', err);
+          setLastError(`Failed to load content: ${err.message}. Using defaults.`);
+          // Fall back to localStorage → defaultContent
+          setContentState(USE_API ? defaultContent : lsRead());
+        }
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    }
+
+    load();
+    return () => { cancelled = true; };
+  }, []); // eslint-disable-line
+
+  // ── Site: polling + visibility-change re-fetch ───────────────
+  useEffect(() => {
+    if (mode !== 'site') return;
+
+    const refetch = async () => {
+      try {
+        const fresh = USE_API ? await apiFetchContent() : lsRead();
+        setContentState(fresh);
+      } catch { /* silently ignore poll failures */ }
+    };
+
+    // 30-second interval
+    const interval = setInterval(refetch, POLL_INTERVAL_MS);
+
+    // Re-fetch immediately when tab becomes visible again
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') refetch();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    // Re-fetch when controller posts a message (cross-origin iframe save)
+    const onMessage = (e: MessageEvent) => {
+      if (e.data?.type === 'cms-content-updated') refetch();
+    };
+    window.addEventListener('message', onMessage);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('message', onMessage);
+    };
+  }, [mode]);
+
+  // ── Dev/localStorage mode: cross-tab sync via storage event ──
+  useEffect(() => {
+    if (USE_API) return; // API mode doesn't need storage events
+    const handler = (e: StorageEvent) => {
+      if (e.key !== STORAGE_KEY || e.newValue === null) return;
+      try { setContentState(mergeContent(JSON.parse(e.newValue) as Partial<SiteContent>)); } catch { /* ignore */ }
+    };
+    window.addEventListener('storage', handler);
+    return () => window.removeEventListener('storage', handler);
+  }, []);
+
+  // ── patchContent: local state update (+ localStorage in dev) ─
+  const patchContent = useCallback(<K extends keyof SiteContent>(
+    key: K,
+    sectionData: Partial<SiteContent[K]>
+  ) => {
+    setContentState(prev => {
+      const next = { ...prev, [key]: { ...prev[key], ...sectionData } } as SiteContent;
+      if (!USE_API) lsPersist(next); // dev: keep iframe in sync on every keystroke
+      return next;
+    });
+  }, []);
+
+  // ── setContent: save + push undo ─────────────────────────────
+  const setContent = useCallback(async (next: SiteContent) => {
+    setUndoStack(prev => [contentRef.current, ...prev].slice(0, MAX_UNDO));
+    setContentState(next);
+
+    if (USE_API) {
+      setIsSaving(true);
+      setLastError(null);
+      try {
+        // PATCH the full object as a whole. The API's merge logic on the server
+        // is section-level, so sending the whole object is safe and ensures
+        // the server reflects exactly what the controller has.
+        await apiPatchContent(next as Partial<SiteContent>);
+        // Notify the preview iframe to re-fetch immediately (cross-origin postMessage)
+        try {
+          const iframes = document.querySelectorAll<HTMLIFrameElement>('iframe');
+          iframes.forEach(iframe => {
+            iframe.contentWindow?.postMessage({ type: 'cms-content-updated' }, '*');
+          });
+        } catch { /* postMessage failure is non-fatal */ }
+      } catch (err: any) {
+        setLastError(`Save failed: ${err.message}`);
+        console.error('[setContent API]', err);
+      } finally {
+        setIsSaving(false);
+      }
+    } else {
+      // localStorage mode (dev)
+      lsPersist(next);
+    }
+  }, []);
+
+  // ── resetToDefault ───────────────────────────────────────────
+  const resetToDefault = useCallback(async () => {
+    setUndoStack(prev => [contentRef.current, ...prev].slice(0, MAX_UNDO));
+    setContentState(defaultContent);
+    if (USE_API) {
+      setIsSaving(true);
+      try {
+        await apiPatchContent(defaultContent as Partial<SiteContent>);
+      } catch (err: any) {
+        setLastError(`Reset failed: ${err.message}`);
+      } finally {
+        setIsSaving(false);
+      }
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, []);
+
+  // ── undo ─────────────────────────────────────────────────────
+  const undo = useCallback(() => {
+    if (undoStack.length === 0) return;
+    const [previous, ...rest] = undoStack;
+    setUndoStack(rest);
+    setContentState(previous);
+    if (!USE_API) lsPersist(previous);
+  }, [undoStack]);
+
+  const clearError = useCallback(() => setLastError(null), []);
+
+  return (
+    <ContentContext.Provider value={{
+      content, setContent, patchContent, resetToDefault,
+      undoStack, canUndo: undoStack.length > 0, undo,
+      isLoading, isSaving, lastError, clearError,
+    }}>
+      {children}
+    </ContentContext.Provider>
+  );
+}
+
+// ── Hooks ─────────────────────────────────────────────────────
+export function useContent(): SiteContent {
+  const ctx = useContext(ContentContext);
+  if (!ctx) throw new Error('useContent() must be used inside <ContentProvider>');
+  return ctx.content;
+}
+
+export function useContentContext(): ContentContextValue {
+  const ctx = useContext(ContentContext);
+  if (!ctx) throw new Error('useContentContext() must be used inside <ContentProvider>');
+  return ctx;
+}

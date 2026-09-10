@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useContent } from '../context/ContentContext';
 
-// --- IMPORT THE PDF AS A CONSTANT ---
+// --- Scroll target IDs stay hardcoded (unsafe to expose via CMS) ---
+const NAV_TARGET_IDS = ['about', 'sectors', 'portfolio', 'infrastructure', 'clients', 'certifications'];
+
 import portfolioPDF from '../assets/portfolio.pdf';
 
-// --- CONFIG: Define Menu Items and their Target IDs ---
-const NAV_ITEMS = [
-  { label: "ABOUT US", targetId: "about" },
-  { label: "SECTORS", targetId: "sectors" },
-  { label: "SERVICES", targetId: "portfolio" },
-  { label: "INFRASTRUCTURE", targetId: "infrastructure" },
-  { label: "CLIENTS", targetId: "clients" },
-  { label: "CERTIFICATIONS", targetId: "certifications" }
-];
-
 export default function Navbar() {
+  const { navbar } = useContent();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -30,7 +24,7 @@ export default function Navbar() {
 
   // 2. Detect Mobile Screen Size
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1100); // Slightly increased breakpoint for 6 items
+    const checkMobile = () => setIsMobile(window.innerWidth < 1100);
     window.addEventListener('resize', checkMobile);
     checkMobile();
     return () => window.removeEventListener('resize', checkMobile);
@@ -40,14 +34,9 @@ export default function Navbar() {
   const scrollToSection = (e, targetId) => {
     e.preventDefault();
     setMenuOpen(false);
-
     const element = document.getElementById(targetId);
-
     if (element) {
-      window.scrollTo({
-        top: element.offsetTop - 100,
-        behavior: 'smooth'
-      });
+      window.scrollTo({ top: element.offsetTop - 100, behavior: 'smooth' });
     }
   };
 
@@ -75,9 +64,8 @@ export default function Navbar() {
           borderBottomColor: isScrolled ? 'rgba(255,255,255,0.1)' : 'transparent',
           display: 'flex',
           alignItems: 'center',
-          // --- FIX 1: Explicitly space out the sections and enforce a hard minimum gap ---
           justifyContent: 'space-between',
-          gap: '30px', 
+          gap: '30px',
           transition: 'padding 0.4s ease, background-color 0.4s ease, border-bottom-color 0.4s ease, backdrop-filter 0.4s ease'
         }}
       >
@@ -85,16 +73,11 @@ export default function Navbar() {
         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', minWidth: 'max-content' }}>
           <div
             onClick={handleLogoClick}
-            style={{
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              zIndex: 201
-            }}
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', zIndex: 201 }}
           >
             <img
               src="/bunnylogo.png"
-              alt="Bunny Industries Logo"
+              alt={navbar.logoAlt}
               style={{
                 height: isScrolled ? '45px' : '55px',
                 width: 'auto',
@@ -111,24 +94,23 @@ export default function Navbar() {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <ul style={{
               display: 'flex',
-              // --- FIX 2: Reduced gap and padding so it fits better on laptops ---
-              gap: '20px', 
+              gap: '20px',
               listStyle: 'none',
               margin: 0,
-              padding: '0 25px', 
-              height: '46px', 
-              alignItems: 'center', 
-              border: '1px solid rgba(255,255,255,0.4)', 
+              padding: '0 25px',
+              height: '46px',
+              alignItems: 'center',
+              border: '1px solid rgba(255,255,255,0.4)',
               borderRadius: '50px',
               backgroundColor: 'rgba(255,255,255,0.06)',
               backdropFilter: 'blur(5px)',
               boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
             }}>
-              {NAV_ITEMS.map((item) => (
+              {navbar.navItems.map((item, index) => (
                 <li key={item.label} style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
                   <a
-                    href={`#${item.targetId}`}
-                    onClick={(e) => scrollToSection(e, item.targetId)}
+                    href={`#${NAV_TARGET_IDS[index]}`}
+                    onClick={(e) => scrollToSection(e, NAV_TARGET_IDS[index])}
                     style={{
                       color: '#FFFFFF',
                       textDecoration: 'none',
@@ -166,15 +148,14 @@ export default function Navbar() {
           </div>
         )}
 
-        {/* --- RIGHT: ACTIONS (Download & Contact) --- */}
-        {/* --- FIX 3: Added minWidth: max-content so the buttons never get squished by the center menu --- */}
+        {/* --- RIGHT: ACTIONS --- */}
         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '15px', minWidth: 'max-content' }}>
           {!isMobile && (
             <>
               {/* SECONDARY CTA: GHOST BUTTON */}
               <a
                 href={portfolioPDF}
-                download="Bunny_Industries_Brochure.pdf"
+                download={navbar.ctaBrochureFilename}
                 style={{
                   background: 'transparent',
                   border: '1px solid rgba(255,255,255,0.8)',
@@ -192,18 +173,12 @@ export default function Navbar() {
                   justifyContent: 'center',
                   textDecoration: 'none',
                   fontWeight: '600',
-                  whiteSpace: 'nowrap' 
+                  whiteSpace: 'nowrap'
                 }}
-                onMouseOver={(e) => {
-                  e.target.style.background = 'rgba(255,255,255,0.1)';
-                  e.target.style.borderColor = '#FFF';
-                }}
-                onMouseOut={(e) => {
-                  e.target.style.background = 'transparent';
-                  e.target.style.borderColor = 'rgba(255,255,255,0.8)';
-                }}
+                onMouseOver={(e) => { e.target.style.background = 'rgba(255,255,255,0.1)'; e.target.style.borderColor = '#FFF'; }}
+                onMouseOut={(e) => { e.target.style.background = 'transparent'; e.target.style.borderColor = 'rgba(255,255,255,0.8)'; }}
               >
-                DOWNLOAD BROCHURE
+                {navbar.ctaBrochureLabel}
               </a>
 
               {/* PRIMARY CTA: SOLID WHITE BUTTON */}
@@ -225,18 +200,12 @@ export default function Navbar() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: '600',
-                  whiteSpace: 'nowrap' 
+                  whiteSpace: 'nowrap'
                 }}
-                onMouseOver={(e) => {
-                  e.target.style.background = 'transparent';
-                  e.target.style.color = '#FFFFFF';
-                }}
-                onMouseOut={(e) => {
-                  e.target.style.background = '#FFFFFF';
-                  e.target.style.color = '#000000';
-                }}
+                onMouseOver={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#FFFFFF'; }}
+                onMouseOut={(e) => { e.target.style.background = '#FFFFFF'; e.target.style.color = '#000000'; }}
               >
-                LET'S TALK
+                {navbar.ctaTalkLabel}
               </button>
             </>
           )}
@@ -304,11 +273,11 @@ export default function Navbar() {
               ✕
             </button>
 
-            {NAV_ITEMS.map((item) => (
+            {navbar.navItems.map((item, index) => (
               <a
                 key={item.label}
-                href={`#${item.targetId}`}
-                onClick={(e) => scrollToSection(e, item.targetId)}
+                href={`#${NAV_TARGET_IDS[index]}`}
+                onClick={(e) => scrollToSection(e, NAV_TARGET_IDS[index])}
                 style={{
                   color: '#FFFFFF',
                   textDecoration: 'none',
@@ -324,10 +293,9 @@ export default function Navbar() {
 
             {/* MOBILE DUAL ACTION CTAs */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px', width: '80%', maxWidth: '300px' }}>
-              
               <a
                 href={portfolioPDF}
-                download="Bunny_Industries_Brochure.pdf"
+                download={navbar.ctaBrochureFilename}
                 style={{
                   background: 'transparent',
                   border: '1px solid rgba(255,255,255,0.4)',
@@ -343,9 +311,9 @@ export default function Navbar() {
                   fontWeight: '500'
                 }}
               >
-                DOWNLOAD BROCHURE
+                {navbar.ctaBrochureLabel}
               </a>
-              
+
               <button
                 onClick={(e) => scrollToSection(e, 'contact')}
                 style={{
@@ -362,10 +330,9 @@ export default function Navbar() {
                   fontWeight: '600'
                 }}
               >
-                LET'S TALK
+                {navbar.ctaTalkLabel}
               </button>
             </div>
-            
           </motion.div>
         )}
       </AnimatePresence>
