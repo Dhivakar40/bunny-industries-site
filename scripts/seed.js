@@ -103,6 +103,7 @@ async function uploadAsset({ localPath, publicPath }) {
     access: 'public',
     contentType,
     addRandomSuffix: false, // keep deterministic URLs
+    allowOverwrite: true,   // safe to re-run: overwrites existing blobs instead of failing
   });
 
   return { publicPath, blobUrl: blob.url };
@@ -185,13 +186,22 @@ async function main() {
   // ── Step 4: Replace paths with Blob URLs
   console.log('Step 4: Replacing /public/ paths with Blob URLs…');
   const seededContent = replaceAssetPaths(defaultContent, urlMap);
+  // Count actual replacements (paths that existed in content AND had a Blob URL mapped)
   let replacements = 0;
-  const originalStr = JSON.stringify(defaultContent);
-  const seededStr = JSON.stringify(seededContent);
-  // Count how many URLs were replaced
-  Object.values(urlMap).forEach(url => {
-    if (seededStr.includes(url)) replacements++;
-  });
+  function countReplacements(original, replaced) {
+    if (typeof original === 'string') {
+      if (original !== replaced) replacements++;
+      return;
+    }
+    if (Array.isArray(original)) {
+      original.forEach((item, i) => countReplacements(item, replaced[i]));
+      return;
+    }
+    if (original && typeof original === 'object') {
+      Object.keys(original).forEach(k => countReplacements(original[k], replaced[k]));
+    }
+  }
+  countReplacements(defaultContent, seededContent);
   console.log(`  ✓ ${replacements} asset path(s) replaced with Blob URLs.\n`);
 
   // ── Step 5: Write to Redis

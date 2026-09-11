@@ -16,7 +16,18 @@ import react from '@vitejs/plugin-react';
 //                      or serve locally only. Password-gated via ControllerRoute.
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'rename-html',
+      enforce: 'post',
+      generateBundle(options, bundle) {
+        if (bundle['controller.html']) {
+          bundle['controller.html'].fileName = 'index.html';
+        }
+      }
+    }
+  ],
 
   define: {
     __INCLUDE_CONTROLLER__: 'true',
@@ -33,7 +44,7 @@ export default defineConfig({
 
     rollupOptions: {
       input: {
-        controller: 'controller.html',
+        index: 'controller.html',
       },
 
       output: {
