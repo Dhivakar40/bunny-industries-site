@@ -45,13 +45,18 @@ function mergeContent(base, patch) {
   return merged;
 }
 
+function setCorsHeaders(res, cors) {
+  Object.entries(cors).forEach(([key, val]) => res.setHeader(key, val));
+}
+
 // ── Handler ───────────────────────────────────────────────────
 export default async function handler(req, res) {
   const cors = corsHeaders(req);
 
   // Pre-flight
   if (req.method === 'OPTIONS') {
-    return res.status(204).set(cors).end();
+    setCorsHeaders(res, cors);
+    return res.status(204).end();
   }
 
   // ── GET /api/content ─────────────────────────────────────────
@@ -60,26 +65,31 @@ export default async function handler(req, res) {
       const stored = await redis.get(CONTENT_KEY);
       if (!stored) {
         // First request ever — return empty object; seed script will populate.
-        return res.status(200).set(cors).json({});
+        setCorsHeaders(res, cors);
+        return res.status(200).json({});
       }
       const content = typeof stored === 'string' ? JSON.parse(stored) : stored;
-      return res.status(200).set(cors).json(content);
+      setCorsHeaders(res, cors);
+      return res.status(200).json(content);
     } catch (err) {
       console.error('[GET /api/content]', err);
-      return res.status(500).set(cors).json({ error: 'Failed to read content' });
+      setCorsHeaders(res, cors);
+      return res.status(500).json({ error: 'Failed to read content' });
     }
   }
 
   // ── PATCH /api/content ───────────────────────────────────────
   if (req.method === 'PATCH') {
     if (!isAuthorized(req)) {
-      return res.status(401).set(cors).json({ error: 'Unauthorized' });
+      setCorsHeaders(res, cors);
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     try {
       const patch = req.body;
       if (!patch || typeof patch !== 'object' || Array.isArray(patch)) {
-        return res.status(400).set(cors).json({ error: 'Body must be a JSON object' });
+        setCorsHeaders(res, cors);
+        return res.status(400).json({ error: 'Body must be a JSON object' });
       }
 
       // Read current, merge, write back
@@ -91,14 +101,17 @@ export default async function handler(req, res) {
       const merged = mergeContent(base, patch);
       await redis.set(CONTENT_KEY, JSON.stringify(merged));
 
-      return res.status(200).set(cors).json(merged);
+      setCorsHeaders(res, cors);
+      return res.status(200).json(merged);
     } catch (err) {
       console.error('[PATCH /api/content]', err);
-      return res.status(500).set(cors).json({ error: 'Failed to save content' });
+      setCorsHeaders(res, cors);
+      return res.status(500).json({ error: 'Failed to save content' });
     }
   }
 
-  return res.status(405).set(cors).json({ error: 'Method not allowed' });
+  setCorsHeaders(res, cors);
+  return res.status(405).json({ error: 'Method not allowed' });
 }
 
 export const config = {

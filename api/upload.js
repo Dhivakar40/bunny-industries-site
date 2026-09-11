@@ -10,6 +10,10 @@ function corsHeaders() {
   };
 }
 
+function setCorsHeaders(res, cors) {
+  Object.entries(cors).forEach(([key, val]) => res.setHeader(key, val));
+}
+
 // ── Auth ──────────────────────────────────────────────────────
 function isAuthorized(req) {
   const secret = process.env.CONTROLLER_API_SECRET;
@@ -32,16 +36,19 @@ export default async function handler(req, res) {
   const cors = corsHeaders();
 
   if (req.method === 'OPTIONS') {
-    return res.status(204).set(cors).end();
+    setCorsHeaders(res, cors);
+    return res.status(204).end();
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).set(cors).json({ error: 'Method not allowed' });
+    setCorsHeaders(res, cors);
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   // All POST requests to this route must be authorized
   if (!isAuthorized(req)) {
-    return res.status(401).set(cors).json({ error: 'Unauthorized' });
+    setCorsHeaders(res, cors);
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
   try {
@@ -76,10 +83,12 @@ export default async function handler(req, res) {
       },
     });
 
-    return res.status(200).set(cors).json(response);
+    setCorsHeaders(res, cors);
+    return res.status(200).json(response);
   } catch (err) {
     console.error('[POST /api/upload]', err);
-    return res.status(400).set(cors).json({ error: err.message ?? 'Upload failed' });
+    setCorsHeaders(res, cors);
+    return res.status(400).json({ error: err.message ?? 'Upload failed' });
   }
 }
 
