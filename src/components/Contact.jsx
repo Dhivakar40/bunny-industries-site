@@ -125,7 +125,7 @@ ${contact.emailFooterNote}
               </h5>
               <div style={{ display: 'flex', gap: '20px' }}>
                 <SocialLink icon={Icons.gmail} href={`mailto:${contact.emailAddress}`} />
-                <SocialLink icon={Icons.whatsapp} href={`https://wa.me/${contact.whatsappNumber}`} />
+                <SocialLink icon={Icons.whatsapp} href={`https://wa.me/${contact.whatsappNumber}${contact.whatsappMessage ? `?text=${encodeURIComponent(contact.whatsappMessage)}` : ''}`} />
               </div>
             </div>
           </motion.div>

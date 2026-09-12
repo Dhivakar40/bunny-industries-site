@@ -273,6 +273,7 @@ export function ContactSection() {
         <div style={{ fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#6A6E7A', marginBottom: '12px' }}>Contact Info & Email Config</div>
         <TextField label="Gmail Address (social link)" value={c.emailAddress} onChange={v => patch('emailAddress', v)} hint="Used as the mailto: href on the Gmail icon." />
         <TextField label="WhatsApp Number (digits only)" value={c.whatsappNumber} onChange={v => patch('whatsappNumber', v)} hint='Country code + number, no spaces or + (e.g. 919364360603)' />
+        <TextField label="WhatsApp Pre-filled Message" value={c.whatsappMessage} onChange={v => patch('whatsappMessage', v)} hint="The text message pre-filled when they click the WhatsApp icon." />
         <TextField label="Form Submission Email" value={c.formSubmissionEmail} onChange={v => patch('formSubmissionEmail', v)} hint="The mailto: address the contact form sends to." />
         <TextField label="Email Template Subject" value={c.emailTemplateSubject} onChange={v => patch('emailTemplateSubject', v)} hint="{name} is replaced with the form sender's name." />
         <TextField label="Email Template Header" value={c.emailTemplateHeader} onChange={v => patch('emailTemplateHeader', v)} hint="Bold header line in the email body." />

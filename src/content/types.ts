@@ -182,6 +182,7 @@ export interface ContactContent {
   copyrightLine: string;   // text
   emailAddress: string;    // text   — gmail social link
   whatsappNumber: string;  // text   — WhatsApp href number (digits only)
+  whatsappMessage: string; // text   — Pre-filled WhatsApp inquiry message
   formSubmissionEmail: string; // text — mailto: target
   emailTemplateSubject: string; // text
   emailTemplateHeader: string;  // text
