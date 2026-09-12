@@ -70,7 +70,7 @@ function validateImport(obj: unknown): obj is Partial<SiteContent> {
 
 // ── Top bar ───────────────────────────────────────────────────
 function TopBar({
-  isDirty, onSave, onExport, onImport, onReset, onUndo, canUndo, previewVisible, setPreviewVisible,
+  isDirty, onSave, onExport, onImport, onReset, onUndo, canUndo, onDiscard, previewVisible, setPreviewVisible,
 }: {
   isDirty: boolean;
   onSave: () => void;
