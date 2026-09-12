@@ -92,7 +92,10 @@ export interface ContentContextValue {
   /** last error from an API call, null if none */
   lastError: string | null;
   clearError: () => void;
+  /** Reload content from the API/localStorage (does NOT wipe Redis data) */
   reloadContent: () => Promise<void>;
+  /** true while reloadContent is running */
+  isReloading: boolean;
 }
 
 const ContentContext = createContext<ContentContextValue | null>(null);
@@ -118,6 +121,7 @@ export function ContentProvider({
   const [undoStack, setUndoStack] = useState<SiteContent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isReloading, setIsReloading] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);
   const contentRef = useRef(content);
 
@@ -262,9 +266,10 @@ export function ContentProvider({
 
   const clearError = useCallback(() => setLastError(null), []);
 
-  // ── reloadContent ────────────────────────────────────────────
+  // ── reloadContent: fetch latest from API WITHOUT wiping data ────
+  // Uses a SEPARATE isReloading flag so the full-page overlay is NOT shown.
   const reloadContent = useCallback(async () => {
-    setIsLoading(true);
+    setIsReloading(true);
     setLastError(null);
     try {
       const fresh = USE_API ? await apiFetchContent() : lsRead();
@@ -273,7 +278,7 @@ export function ContentProvider({
     } catch (err: any) {
       setLastError(`Reload failed: ${err.message}`);
     } finally {
-      setIsLoading(false);
+      setIsReloading(false);
     }
   }, []);
 
@@ -281,7 +286,7 @@ export function ContentProvider({
     <ContentContext.Provider value={{
       content, setContent, patchContent, resetToDefault,
       undoStack, canUndo: undoStack.length > 0, undo,
-      isLoading, isSaving, lastError, clearError, reloadContent,
+      isLoading, isSaving, lastError, clearError, reloadContent, isReloading,
     }}>
       {children}
     </ContentContext.Provider>

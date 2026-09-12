@@ -155,7 +155,7 @@ function TopBtn({ children, onClick, disabled, danger, title }: {
 
 // ── Main controller ───────────────────────────────────────────
 export default function ControllerApp() {
-  const { content, setContent, patchContent, resetToDefault, canUndo, undo, isSaving, isLoading, lastError, clearError, reloadContent } = useContentContext();
+  const { content, setContent, patchContent, resetToDefault, canUndo, undo, isSaving, isLoading, lastError, clearError, reloadContent, isReloading } = useContentContext();
   const [activeSection, setActiveSection] = useState('meta');
   const [isDirty, setIsDirty] = useState(false);
   const [importError, setImportError] = useState('');
@@ -294,10 +294,11 @@ export default function ControllerApp() {
   const handleDiscard = useCallback(async () => {
     if (confirm('Discard all unsaved changes and reload the last saved version from the cloud?')) {
       await reloadContent();
-      savedContentRef.current = content; // Will be updated on next render anyway, but good for local tracking
+      // After reload, contentRef.current will have been updated by React state.
+      // Force isDirty to false — the new content IS the saved state.
       setIsDirty(false);
     }
-  }, [reloadContent, content]);
+  }, [reloadContent]);
 
   const SectionEditor = SECTION_MAP[activeSection];
 
@@ -365,6 +366,13 @@ export default function ControllerApp() {
       {isSaving && (
         <div style={{ background: `${C.accent}18`, borderBottom: `1px solid ${C.accent}30`, padding: '8px 20px', fontSize: '0.78rem', color: C.accent }}>
           ⟳ Saving to API…
+        </div>
+      )}
+
+      {/* ── RELOADING INDICATOR ── */}
+      {isReloading && (
+        <div style={{ background: `${C.warning}18`, borderBottom: `1px solid ${C.warning}30`, padding: '8px 20px', fontSize: '0.78rem', color: C.warning }}>
+          ↻ Reloading saved content from cloud…
         </div>
       )}
 
