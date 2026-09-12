@@ -28,18 +28,18 @@ const C = {
 
 // ── Sidebar sections ──────────────────────────────────────────
 const SECTIONS = [
-  { key: 'meta',           label: 'SEO / Meta',       icon: '🔍' },
-  { key: 'theme',          label: 'Theme Colors',      icon: '🎨' },
-  { key: 'navbar',         label: 'Navbar',            icon: '☰' },
-  { key: 'hero',           label: 'Hero',              icon: '⚡' },
-  { key: 'about',          label: 'About',             icon: '🏭' },
-  { key: 'services',       label: 'Sectors',           icon: '✈' },
-  { key: 'portfolio',      label: 'Portfolio / Infra', icon: '⚙' },
-  { key: 'clients',        label: 'Clients',           icon: '🤝' },
-  { key: 'certifications', label: 'Certifications',    icon: '🏆' },
-  { key: 'contact',        label: 'Contact',           icon: '📬' },
-  { key: 'footer',         label: 'Footer',            icon: '📄' },
-  { key: 'legal',          label: 'Legal',             icon: '⚖' },
+  { key: 'meta',           label: 'SEO / Meta'        },
+  { key: 'theme',          label: 'Theme Colors'       },
+  { key: 'navbar',         label: 'Navbar'             },
+  { key: 'hero',           label: 'Hero'               },
+  { key: 'about',          label: 'About'              },
+  { key: 'services',       label: 'Sectors'            },
+  { key: 'portfolio',      label: 'Portfolio / Infra'  },
+  { key: 'clients',        label: 'Clients'            },
+  { key: 'certifications', label: 'Certifications'     },
+  { key: 'contact',        label: 'Contact'            },
+  { key: 'footer',         label: 'Footer'             },
+  { key: 'legal',          label: 'Legal'              },
 ];
 
 const SECTION_MAP: Record<string, React.FC> = {
@@ -104,19 +104,13 @@ function TopBar({
 
       <div style={{ flex: 1 }} />
 
-      {/* Undo */}
-      <TopBtn onClick={onUndo} disabled={!canUndo} title="Undo last save">↩ Undo</TopBtn>
-      {/* Preview toggle */}
+      <TopBtn onClick={onUndo} disabled={!canUndo} title="Undo last save">Undo</TopBtn>
       <TopBtn onClick={() => setPreviewVisible(!previewVisible)} title={previewVisible ? 'Hide Preview' : 'Show Preview'}>
-        {previewVisible ? '⧉ Hide Preview' : '⧉ Preview'}
+        {previewVisible ? 'Hide Preview' : 'Preview'}
       </TopBtn>
-      {/* Import */}
-      <TopBtn onClick={onImport} title="Import JSON">⬆ Import</TopBtn>
-      {/* Export */}
-      <TopBtn onClick={onExport} title="Export JSON">⬇ Export</TopBtn>
-      {/* Reset */}
-      <TopBtn onClick={onReset} title="Reset all content to defaults" danger>⟲ Reset</TopBtn>
-      {/* Save */}
+      <TopBtn onClick={onImport} title="Import JSON">Import</TopBtn>
+      <TopBtn onClick={onExport} title="Export JSON">Export</TopBtn>
+      <TopBtn onClick={onReset} title="Reset all content to defaults" danger>Reset</TopBtn>
       <button
         onClick={onSave}
         style={{
@@ -166,8 +160,63 @@ export default function ControllerApp() {
   const [importSuccess, setImportSuccess] = useState('');
   const [confirmReset, setConfirmReset] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(true);
+
+  // Resizable form panel width (px). Drag the handle to change.
+  const [formWidth, setFormWidth] = useState(480);
+  const isDragging = useRef(false);
+  const dragStartX = useRef(0);
+  const dragStartWidth = useRef(0);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const savedContentRef = useRef<SiteContent>(content);
+  const previewPaneRef = useRef<HTMLDivElement>(null);
+  const [previewScale, setPreviewScale] = useState(1);
+
+  // Measure preview pane and compute CSS scale so site renders at 1280px then shrinks to fit
+  useEffect(() => {
+    if (!previewVisible) return;
+    const el = previewPaneRef.current;
+    if (!el) return;
+    const SITE_WIDTH = 1280;
+    const measure = () => {
+      const w = el.clientWidth;
+      setPreviewScale(w > 0 ? Math.min(1, w / SITE_WIDTH) : 1);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [previewVisible, formWidth]);
+
+  // Drag-to-resize the form panel
+  const onDragMouseDown = useCallback((e: React.MouseEvent) => {
+    isDragging.current = true;
+    dragStartX.current = e.clientX;
+    dragStartWidth.current = formWidth;
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  }, [formWidth]);
+
+  useEffect(() => {
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDragging.current) return;
+      const delta = e.clientX - dragStartX.current;
+      const next = Math.max(300, Math.min(900, dragStartWidth.current + delta));
+      setFormWidth(next);
+    };
+    const onMouseUp = () => {
+      if (!isDragging.current) return;
+      isDragging.current = false;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }, []);
 
   // Track dirty state: compare current content to last saved
   useEffect(() => {
@@ -341,7 +390,6 @@ export default function ControllerApp() {
                 borderLeft: `2px solid ${activeSection === sec.key ? C.accent : 'transparent'}`,
               }}
             >
-              <span style={{ fontSize: '0.9rem', flexShrink: 0 }}>{sec.icon}</span>
               {sec.label}
             </button>
           ))}
@@ -357,10 +405,10 @@ export default function ControllerApp() {
 
         {/* MAIN FORM PANEL */}
         <div style={{
-          flex: previewVisible ? '0 0 560px' : 1,
-          minWidth: previewVisible ? '380px' : 0,
+          width: previewVisible ? `${formWidth}px` : undefined,
+          flex: previewVisible ? '0 0 auto' : 1,
+          minWidth: previewVisible ? '300px' : 0,
           overflowY: 'auto', padding: '28px 32px',
-          borderRight: previewVisible ? `1px solid ${C.border}` : 'none',
         }}>
           {/* Section title */}
           <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: `1px solid ${C.border}` }}>
@@ -368,7 +416,6 @@ export default function ControllerApp() {
               fontFamily: C.fontDisplay, fontSize: '1.4rem', color: C.text,
               textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0,
             }}>
-              {SECTIONS.find(s => s.key === activeSection)?.icon}{' '}
               {SECTIONS.find(s => s.key === activeSection)?.label}
             </h2>
             <div style={{ fontSize: '0.72rem', color: C.textMuted, marginTop: '4px' }}>
@@ -380,9 +427,24 @@ export default function ControllerApp() {
           {SectionEditor && <SectionEditor />}
         </div>
 
+        {/* DRAG HANDLE */}
+        {previewVisible && (
+          <div
+            onMouseDown={onDragMouseDown}
+            style={{
+              width: '6px', flexShrink: 0, cursor: 'col-resize',
+              background: C.border, transition: 'background 0.15s',
+              position: 'relative',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = C.accent)}
+            onMouseLeave={e => (e.currentTarget.style.background = C.border)}
+          />
+        )}
+
         {/* RIGHT PREVIEW PANE */}
         {previewVisible && (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+            {/* Preview header */}
             <div style={{
               display: 'flex', alignItems: 'center', gap: '8px',
               padding: '8px 16px', background: C.surface, borderBottom: `1px solid ${C.border}`,
@@ -390,11 +452,33 @@ export default function ControllerApp() {
             }}>
               <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.success }} />
               Live Preview
+              <span style={{ marginLeft: '8px', opacity: 0.5 }}>
+                {Math.round(previewScale * 100)}% — {Math.round(1280 * previewScale)}px
+              </span>
               <span style={{ marginLeft: 'auto', opacity: 0.5 }}>Updates instantly as you type</span>
             </div>
-            <PreviewPane />
+
+            {/* Scaled preview container — site renders at 1280px then scales to fit */}
+            <div
+              ref={previewPaneRef}
+              style={{
+                flex: 1, overflow: 'hidden', position: 'relative',
+                // transform containing block for fixed-position Navbar (also set in PreviewPane.tsx)
+              }}
+            >
+              <div style={{
+                width: '1280px',
+                transform: `scale(${previewScale})`,
+                transformOrigin: 'top left',
+                // Height expands naturally; parent clips overflow
+                height: `${previewScale > 0 ? (100 / previewScale) : 100}%`,
+                overflow: 'auto',
+              }}>
+                <PreviewPane />
+              </div>
+            </div>
           </div>
-)}
+        )}
       </div>
     </div>
   );

@@ -15,11 +15,11 @@ import Footer from '../components/Footer';
 export default function PreviewPane() {
   return (
     <div style={{
-      width: '100%', height: '100%', overflow: 'auto', background: '#0F1115',
-      // transform creates a new stacking context, making this div the containing
-      // block for any position:fixed descendants (e.g. the Navbar). Without this,
-      // position:fixed would escape and overlap the controller's own top bar.
-      transform: 'translateZ(0)',
+      width: '100%',
+      height: '100%',
+      background: '#0F1115',
+      // position:relative ensures any position:fixed children (Navbar) are contained
+      // by the parent scale wrapper in ControllerApp, not the viewport.
       position: 'relative',
     }}>
       <div className="app-main">
