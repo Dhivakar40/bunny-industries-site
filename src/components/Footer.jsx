@@ -143,37 +143,6 @@ export default function Footer() {
               </ul>
             </div>
           </div>
-
-          {/* --- MAP EMBEDS SECTION --- */}
-          {/* Map embed URLs stay hardcoded in JSX (complex iframe src — unsafe to expose) */}
-          <div style={{ marginTop: '60px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px' }}>
-            <div>
-              <h4 style={{ fontFamily: '"Oswald", sans-serif', color: '#FFF', fontSize: '1.2rem', marginBottom: '15px', letterSpacing: '0.05em' }}>
-                {footer.unit1.label}
-              </h4>
-              <div style={{ width: '100%', height: '300px', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', position: 'relative' }}>
-                <iframe
-                  src="https://maps.google.com/maps?q=Bunny%20Industries,%20SIDCO%20Industrial%20Estate,%20Hosur&t=&z=15&ie=UTF8&iwloc=&output=embed"
-                  width="100%" height="100%" style={{ border: 0 }}
-                  allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
-                  title="Bunny Industries Unit 1"
-                />
-              </div>
-            </div>
-            <div>
-              <h4 style={{ fontFamily: '"Oswald", sans-serif', color: '#FFF', fontSize: '1.2rem', marginBottom: '15px', letterSpacing: '0.05em' }}>
-                {footer.unit2.label}
-              </h4>
-              <div style={{ width: '100%', height: '300px', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', position: 'relative' }}>
-                <iframe
-                  src="https://maps.google.com/maps?q=2/2,%20VTR%20Road,%20SF%20No.%20185/2A,%20Door%20No.%20185/2,%20Thiruvalluvar%20Nagar,%20Zuzuvadi,%20Hosur-635126&t=&z=15&ie=UTF8&iwloc=&output=embed"
-                  width="100%" height="100%" style={{ border: 0 }}
-                  allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
-                  title="Bunny Industries Unit 2"
-                />
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* --- COPYRIGHT BAR --- */}
