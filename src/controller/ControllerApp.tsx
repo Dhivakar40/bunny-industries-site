@@ -79,6 +79,7 @@ function TopBar({
   onReset: () => void;
   onUndo: () => void;
   canUndo: boolean;
+  onDiscard: () => void;
   previewVisible: boolean;
   setPreviewVisible: (v: boolean) => void;
 }) {
@@ -110,7 +111,8 @@ function TopBar({
       </TopBtn>
       <TopBtn onClick={onImport} title="Import JSON">Import</TopBtn>
       <TopBtn onClick={onExport} title="Export JSON">Export</TopBtn>
-      <TopBtn onClick={onReset} title="Reset all content to defaults" danger>Reset</TopBtn>
+      <TopBtn onClick={onDiscard} disabled={!isDirty} title="Discard unsaved changes and reload from cloud" danger>Discard</TopBtn>
+      <TopBtn onClick={onReset} title="Reset all content to factory defaults" danger>Factory Reset</TopBtn>
       <button
         onClick={onSave}
         style={{
@@ -153,7 +155,7 @@ function TopBtn({ children, onClick, disabled, danger, title }: {
 
 // ── Main controller ───────────────────────────────────────────
 export default function ControllerApp() {
-  const { content, setContent, patchContent, resetToDefault, canUndo, undo, isSaving, isLoading, lastError, clearError } = useContentContext();
+  const { content, setContent, patchContent, resetToDefault, canUndo, undo, isSaving, isLoading, lastError, clearError, reloadContent } = useContentContext();
   const [activeSection, setActiveSection] = useState('meta');
   const [isDirty, setIsDirty] = useState(false);
   const [importError, setImportError] = useState('');
@@ -289,6 +291,14 @@ export default function ControllerApp() {
     setIsDirty(false);
   }, [undo]);
 
+  const handleDiscard = useCallback(async () => {
+    if (confirm('Discard all unsaved changes and reload the last saved version from the cloud?')) {
+      await reloadContent();
+      savedContentRef.current = content; // Will be updated on next render anyway, but good for local tracking
+      setIsDirty(false);
+    }
+  }, [reloadContent, content]);
+
   const SectionEditor = SECTION_MAP[activeSection];
 
   return (
@@ -308,6 +318,7 @@ export default function ControllerApp() {
         onReset={confirmReset ? handleReset : () => setConfirmReset(true)}
         onUndo={handleUndo}
         canUndo={canUndo}
+        onDiscard={handleDiscard}
         previewVisible={previewVisible}
         setPreviewVisible={setPreviewVisible}
       />

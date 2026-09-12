@@ -92,6 +92,7 @@ export interface ContentContextValue {
   /** last error from an API call, null if none */
   lastError: string | null;
   clearError: () => void;
+  reloadContent: () => Promise<void>;
 }
 
 const ContentContext = createContext<ContentContextValue | null>(null);
@@ -261,11 +262,26 @@ export function ContentProvider({
 
   const clearError = useCallback(() => setLastError(null), []);
 
+  // ── reloadContent ────────────────────────────────────────────
+  const reloadContent = useCallback(async () => {
+    setIsLoading(true);
+    setLastError(null);
+    try {
+      const fresh = USE_API ? await apiFetchContent() : lsRead();
+      setContentState(fresh);
+      setUndoStack([]);
+    } catch (err: any) {
+      setLastError(`Reload failed: ${err.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   return (
     <ContentContext.Provider value={{
       content, setContent, patchContent, resetToDefault,
       undoStack, canUndo: undoStack.length > 0, undo,
-      isLoading, isSaving, lastError, clearError,
+      isLoading, isSaving, lastError, clearError, reloadContent,
     }}>
       {children}
     </ContentContext.Provider>
