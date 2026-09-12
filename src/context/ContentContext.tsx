@@ -98,9 +98,10 @@ export function ContentProvider({
   children: React.ReactNode;
   /**
    * 'site'       → read-only: fetches on mount + polls + re-fetches on tab focus.
-   *                Listens for postMessage from controller iframe after a save.
+   *                The postMessage listener is kept for future-proofing but is not
+   *                triggered by the current architecture (no iframe preview).
    * 'controller' → read/write: fetches on mount, PATCHes API on setContent.
-   *                In localStorage mode: also writes for iframe sync.
+   *                In localStorage mode (dev): also persists for cross-tab sync.
    * 'dev'        → Both behaviors; used in dev when both routes share one provider.
    *                Defaults to 'controller' behavior so the controller route has write access.
    */
@@ -125,8 +126,6 @@ export function ContentProvider({
         let loaded: SiteContent;
         if (USE_API) {
           loaded = await apiFetchContent();
-          // In controller mode, also write to localStorage so the dev preview iframe can pick it up
-          if (mode !== 'site') lsPersist(loaded);
         } else {
           loaded = lsRead();
         }
@@ -167,7 +166,7 @@ export function ContentProvider({
     };
     document.addEventListener('visibilitychange', onVisibility);
 
-    // Re-fetch when controller posts a message (cross-origin iframe save)
+    // Re-fetch when controller posts a message
     const onMessage = (e: MessageEvent) => {
       if (e.data?.type === 'cms-content-updated') refetch();
     };
@@ -198,7 +197,7 @@ export function ContentProvider({
   ) => {
     setContentState(prev => {
       const next = { ...prev, [key]: { ...prev[key], ...sectionData } } as SiteContent;
-      if (!USE_API) lsPersist(next); // dev: keep iframe in sync on every keystroke
+      if (!USE_API) lsPersist(next); // dev: keep cross-tab storage in sync on every keystroke
       return next;
     });
   }, []);
@@ -212,17 +211,9 @@ export function ContentProvider({
       setIsSaving(true);
       setLastError(null);
       try {
-        // PATCH the full object as a whole. The API's merge logic on the server
-        // is section-level, so sending the whole object is safe and ensures
-        // the server reflects exactly what the controller has.
         await apiPatchContent(next as Partial<SiteContent>);
-        // Notify the preview iframe to re-fetch immediately (cross-origin postMessage)
-        try {
-          const iframes = document.querySelectorAll<HTMLIFrameElement>('iframe');
-          iframes.forEach(iframe => {
-            iframe.contentWindow?.postMessage({ type: 'cms-content-updated' }, '*');
-          });
-        } catch { /* postMessage failure is non-fatal */ }
+        // No iframe to notify — the controller's preview is same-tree React,
+        // so it already reflects the new state via shared in-memory state.
       } catch (err: any) {
         setLastError(`Save failed: ${err.message}`);
         console.error('[setContent API]', err);

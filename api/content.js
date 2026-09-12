@@ -13,8 +13,8 @@ const redis = new Redis({
 const CONTENT_KEY = 'bunny-cms-content';
 
 // ── CORS ──────────────────────────────────────────────────────
-// ALLOWED_CONTROLLER_ORIGIN must be set in imsweb's Vercel env vars.
-// e.g. "https://imscontroller.vercel.app"
+// ALLOWED_CONTROLLER_ORIGIN must be set in bunnyweb's Vercel env vars.
+// e.g. "https://bunnycontroller.vercel.app"
 // Set to "*" during initial setup, then lock it down to the real domain.
 function corsHeaders(req) {
   const origin = process.env.ALLOWED_CONTROLLER_ORIGIN ?? '*';
@@ -38,8 +38,8 @@ function isAuthorized(req) {
 function mergeContent(base, patch) {
   const merged = { ...base };
   Object.keys(patch).forEach((key) => {
-    if (patch[key] !== undefined && merged[key] !== undefined) {
-      merged[key] = { ...merged[key], ...patch[key] };
+    if (patch[key] !== undefined) {
+      merged[key] = { ...(merged[key] ?? {}), ...patch[key] };
     }
   });
   return merged;

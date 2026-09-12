@@ -218,10 +218,10 @@ async function main() {
 
   console.log('=== Seed complete ===');
   console.log('Next steps:');
-  console.log('  1. Deploy imsweb: vercel --prod');
+  console.log('  1. Deploy bunnyweb: vercel --prod');
   console.log('  2. Deploy imscontroller: vercel --prod (from same repo, different project)');
   console.log('  3. Open https://imscontroller.vercel.app/controller → password in VITE_CONTROLLER_PASSWORD');
-  console.log('  4. Verify site renders at https://imsweb.vercel.app');
+  console.log('  4. Verify site renders at https://bunnyweb.vercel.app');
 }
 
 main().catch(err => {

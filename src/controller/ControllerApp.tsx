@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useContentContext } from '../context/ContentContext';
 import defaultContent from '../content/defaultContent';
 import type { SiteContent } from '../content/types';
+import PreviewPane from './PreviewPane';
 import {
   MetaSection, ThemeSection, NavbarSection, HeroSection, AboutSection,
   ServicesSection, PortfolioSection, ClientsSection, CertificationsSection,
@@ -371,7 +372,7 @@ export default function ControllerApp() {
               {SECTIONS.find(s => s.key === activeSection)?.label}
             </h2>
             <div style={{ fontSize: '0.72rem', color: C.textMuted, marginTop: '4px' }}>
-              Changes sync to the preview in real time. Click <strong style={{ color: C.text }}>SAVE</strong> to commit to localStorage.
+              Changes sync to the preview in real time. Click <strong style={{ color: C.text }}>SAVE</strong> to publish to the live site.
             </div>
           </div>
 
@@ -388,16 +389,12 @@ export default function ControllerApp() {
               fontSize: '0.72rem', color: C.textMuted, flexShrink: 0,
             }}>
               <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.success }} />
-              Live Preview — <span style={{ color: C.accent }}>http://localhost:5173/</span>
-              <span style={{ marginLeft: 'auto', opacity: 0.5 }}>Updates on every keystroke via localStorage</span>
+              Live Preview
+              <span style={{ marginLeft: 'auto', opacity: 0.5 }}>Updates instantly as you type</span>
             </div>
-            <iframe
-              src="http://localhost:5173/"
-              style={{ flex: 1, border: 'none', background: '#0F1115' }}
-              title="Live site preview"
-            />
+            <PreviewPane />
           </div>
-        )}
+)}
       </div>
     </div>
   );
