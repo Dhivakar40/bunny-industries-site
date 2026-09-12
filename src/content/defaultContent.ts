@@ -124,8 +124,6 @@ const defaultContent: SiteContent = {
     infraHeading: "MACHINE INFRASTRUCTURE",
     viewMoreLabel: "View Full Capability List",
     viewLessLabel: "View Less Capabilities",
-    infraViewMoreLabel: "View All 17 Equipment Types",
-    infraViewLessLabel: "View Less Equipment",
     projects: [
       {
         id: 1,
@@ -193,116 +191,9 @@ const defaultContent: SiteContent = {
         items: [
           { make: "ELECTRONICA", capacity: "400x300x400MM", count: 1 }
         ]
-      },
-      {
-        category: "VERTICAL MILLING",
-        img: "/vertical_milling_machine.png",
-        count: 2,
-        items: [
-          { make: "HMT", capacity: "500x300x200MM",  count: 1 },
-          { make: "OKK", capacity: "600X300X250MM",  count: 1 }
-        ]
-      },
-      {
-        category: "HORIZONDAL MILLING",
-        img: "/horizontal_milling_machine.png",
-        count: 1,
-        items: [
-          { make: "HMT", capacity: "700x300x220MM", count: 1 }
-        ]
-      },
-      {
-        category: "SURFACE GRINDING",
-        img: "/surface_grinding_machine.png",
-        count: 3,
-        items: [
-          { make: "PERFECT", capacity: "600x300x200MM", count: 1 },
-          { make: "KENT",    capacity: "500x200x200MM", count: 1 },
-          { make: "OKAMOTA", capacity: "500x200x200MM", count: 1 }
-        ]
-      },
-      {
-        category: "JIGBORING",
-        img: "/jigboring_machine.png",
-        count: 3,
-        items: [
-          { make: "SNT",      capacity: "1100x300x280MM", count: 2 },
-          { make: "AATHREYA", capacity: "1100x300x280MM", count: 1 }
-        ]
-      },
-      {
-        category: "BENCH GRINDING MACHINE",
-        img: "/bench_grinding_machine.png",
-        count: 1,
-        items: [
-          { make: "MGEEYEM", capacity: "2800RPM", count: 1 }
-        ]
-      },
-      {
-        category: "TAPPING MACHINE",
-        img: "/tapping_machine.png",
-        count: 1,
-        items: [
-          { make: "MRCM", capacity: "M2 TO M12 MM", count: 1 }
-        ]
-      },
-      {
-        category: "POWER HACKSAW MACHINE",
-        img: "/power_hack_saw_machine.png",
-        count: 1,
-        items: [
-          { make: "NU-TECH", capacity: "DIA 8MM DIA 150MM", count: 1 }
-        ]
-      },
-      {
-        category: "LATHE MACHINE",
-        img: "/lathe_machine.png",
-        count: 1,
-        items: [
-          { make: "SHREE", capacity: "Ø200x600MM", count: 1 }
-        ]
-      },
-      {
-        category: "DRILLING MACHINE",
-        img: "/drilling_machine.png",
-        count: 1,
-        items: [
-          { make: "VERTEX", capacity: "300x150x200MM", count: 1 }
-        ]
-      },
-      {
-        category: "BUFFING MACHINE",
-        img: "/buffing_machine.png",
-        count: 1,
-        items: [
-          { make: "BARAS", capacity: "2880RPM", count: 1 }
-        ]
-      },
-      {
-        category: "ENGRAVING MACHINE",
-        img: "/engraving_machine.png",
-        count: 1,
-        items: [
-          { make: "ACME LASER", capacity: "300MM LENGTH", count: 1 }
-        ]
-      },
-      {
-        category: "COMPRESSOR",
-        img: "/compressor.png",
-        count: 1,
-        items: [
-          { make: "HANBELL", capacity: "15 HP", count: 1 }
-        ]
-      },
-      {
-        category: "GENERATOR",
-        img: "/generator.png",
-        count: 1,
-        items: [
-          { make: "ASHOK LEYLAND", capacity: "40 KVA", count: 1 }
-        ]
       }
     ]
+
   },
 
   // ── Clients ─────────────────────────────────────────────────

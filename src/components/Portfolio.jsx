@@ -5,7 +5,6 @@ import { useContent } from '../context/ContentContext';
 export default function Portfolio() {
   const { portfolio, theme } = useContent();
   const [showAllProjects, setShowAllProjects] = useState(false);
-  const [showAllMachines, setShowAllMachines] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -16,7 +15,7 @@ export default function Portfolio() {
   }, []);
 
   const visibleProjects = showAllProjects ? portfolio.projects : portfolio.projects.slice(0, 3);
-  const visibleMachines = showAllMachines ? portfolio.machines : portfolio.machines.slice(0, 4);
+  const visibleMachines = portfolio.machines;
 
   return (
     <>
@@ -215,23 +214,6 @@ export default function Portfolio() {
                 </motion.div>
               ))}
             </AnimatePresence>
-          </div>
-
-          {/* --- TOGGLE ALL MACHINES BUTTON --- */}
-          <div style={{ textAlign: 'center', marginTop: '50px' }}>
-            <motion.button
-              onClick={() => setShowAllMachines(prev => !prev)}
-              whileHover={{ scale: 1.05, backgroundColor: '#FFFFFF', color: '#000000' }}
-              whileTap={{ scale: 0.95 }}
-              style={{
-                background: 'transparent', color: '#FFFFFF',
-                border: '1px solid rgba(255,255,255,0.4)', padding: '14px 40px',
-                fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.2em',
-                cursor: 'pointer', fontFamily: '"Oswald", sans-serif', transition: 'background-color 0.3s, color 0.3s'
-              }}
-            >
-              {showAllMachines ? portfolio.infraViewLessLabel : portfolio.infraViewMoreLabel}
-            </motion.button>
           </div>
         </div>
       </section>

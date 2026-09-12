@@ -142,8 +142,6 @@ export function PortfolioSection() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
         <TextField label="Expand Projects Label" value={p.viewMoreLabel} onChange={v => patch('viewMoreLabel', v)} />
         <TextField label="Collapse Projects Label" value={p.viewLessLabel} onChange={v => patch('viewLessLabel', v)} />
-        <TextField label="Expand Infrastructure Label" value={p.infraViewMoreLabel} onChange={v => patch('infraViewMoreLabel', v)} />
-        <TextField label="Collapse Infrastructure Label" value={p.infraViewLessLabel} onChange={v => patch('infraViewLessLabel', v)} />
       </div>
       <ArrayField
         label="Capability Cards (Services section)"
@@ -158,7 +156,7 @@ export function PortfolioSection() {
         newItem={() => ({ id: Date.now(), title: '', desc: '', img: '' })}
       />
       <ArrayNestedField
-        label="Machine Infrastructure (17 categories)"
+        label="Machine Infrastructure Categories"
         items={p.machines}
         onChange={(v: any) => patch('machines', v)}
       />

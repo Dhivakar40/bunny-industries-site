@@ -424,12 +424,31 @@ export function ArrayNestedField({ label, items, onChange }: {
     onChange(items.map((cat, i) => i !== catIdx ? cat : { ...cat, items: cat.items.filter((_, j) => j !== subIdx) }));
   };
 
+  const removeCat = (catIdx: number) => {
+    if (!confirm('Are you sure you want to delete this entire category and all its makes/models?')) return;
+    onChange(items.filter((_, i) => i !== catIdx));
+    setExpandedIdx(null);
+  };
+
+  const addCat = () => {
+    const newCat: MachineCategory = { category: 'New Category', img: '', count: 1, items: [] };
+    onChange([...items, newCat]);
+    setExpandedIdx(items.length);
+    setFilter('');
+  };
+
   const filtered = items.filter(cat => cat.category.toLowerCase().includes(filter.toLowerCase()));
 
   return (
     <div style={{ marginBottom: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
         <label style={labelStyle}>{label} <span style={{ color: C.textMuted, fontWeight: 400 }}>({items.length} categories)</span></label>
+        <button
+          onClick={addCat}
+          style={{ background: C.accent, border: 'none', color: '#000', padding: '6px 14px', borderRadius: C.radius, fontSize: '0.75rem', fontWeight: '700', cursor: 'pointer', fontFamily: C.fontDisplay, letterSpacing: '0.1em' }}
+        >
+          + ADD CATEGORY
+        </button>
       </div>
 
       {/* Search filter */}
@@ -455,6 +474,7 @@ export function ArrayNestedField({ label, items, onChange }: {
                   {cat.category || <span style={{ color: C.textMuted }}>Unnamed</span>}
                   <span style={{ color: C.textMuted, fontSize: '0.75rem', marginLeft: '8px' }}>{cat.count} unit(s), {cat.items.length} make(s)</span>
                 </div>
+                <button onClick={e => { e.stopPropagation(); removeCat(i); }} style={{ ...miniBtn, color: C.danger }} title="Delete Category">✕</button>
                 <span style={{ color: C.textMuted, fontSize: '0.75rem' }}>{expandedIdx === i ? '▲' : '▼'}</span>
               </div>
 

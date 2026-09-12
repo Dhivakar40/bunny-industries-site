@@ -106,8 +106,6 @@ export interface PortfolioContent {
   infraHeading: string;    // text
   viewMoreLabel: string;   // text
   viewLessLabel: string;   // text
-  infraViewMoreLabel: string; // text
-  infraViewLessLabel: string; // text
   projects: CapabilityProject[]; // array — 5 items
   machines: MachineCategory[];   // array — 17 items
 }
