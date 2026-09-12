@@ -7,9 +7,15 @@ const STORAGE_KEY = 'bunny-cms-content';
 const MAX_UNDO = 10;
 const POLL_INTERVAL_MS = 30_000; // 30 seconds
 
-// API base URL injected at build time. Empty string = no API → fall back to localStorage (dev without Vercel).
+// API base URL injected at build time.
+// - bunnycontroller sets VITE_API_BASE_URL=https://bunnyweb.vercel.app (cross-origin PATCH)
+// - bunnyweb sets nothing → API_BASE is '' → fetch uses relative /api/content (same-origin ✓)
+// - local dev with no env var → USE_API=false → localStorage fallback
 const API_BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? '';
-const USE_API = API_BASE.length > 0;
+// import.meta.env.PROD is Vite's built-in flag: true for ALL production builds, false in dev.
+// In production, the API is always reachable (either cross-origin or same-origin).
+// Only skip it in local dev when no explicit base URL is configured.
+const USE_API = import.meta.env.PROD || API_BASE.length > 0;
 
 // Controller secret — only needed by the controller build; undefined on the site build.
 const API_SECRET = (import.meta.env.VITE_CONTROLLER_API_SECRET as string | undefined) ?? '';
