@@ -61,6 +61,16 @@ function mergeContent(saved: Partial<SiteContent>): SiteContent {
     }
   }
 
+  // Ensure footer unit mapLinks are preserved if missing in older saves
+  if (merged.footer) {
+    if (merged.footer.unit1 && !merged.footer.unit1.mapLink) {
+      merged.footer.unit1.mapLink = defaultContent.footer.unit1.mapLink;
+    }
+    if (merged.footer.unit2 && !merged.footer.unit2.mapLink) {
+      merged.footer.unit2.mapLink = defaultContent.footer.unit2.mapLink;
+    }
+  }
+
   return merged;
 }
 

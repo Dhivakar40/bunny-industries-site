@@ -281,10 +281,12 @@ const defaultContent: SiteContent = {
     brandLine1: "BUNNY",
     brandLine2: "INDUSTRIES",
     unit1: {
-      address: "SIDCO Industrial Estate Phase-1, Hosur-635126, Tamil Nadu, India."
+      address: "SIDCO Industrial Estate Phase-1, Hosur-635126, Tamil Nadu, India.",
+      mapLink: "https://maps.app.goo.gl/Sx3MX6EP6HndtSPq9?g_st=aw"
     },
     unit2: {
-      address: "2/2, VTR Road, SF No. 185/2A, Door No. 185/2, Thiruvalluvar Nagar, Zuzuvadi, Hosur-635126."
+      address: "2/2, VTR Road, SF No. 185/2A, Door No. 185/2, Thiruvalluvar Nagar, Zuzuvadi, Hosur-635126.",
+      mapLink: "https://maps.app.goo.gl/VXAc7UpvBX72Likc8"
     },
     columnHeadings: {
       links: "Quick Links",

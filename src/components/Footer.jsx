@@ -52,14 +52,51 @@ export default function Footer() {
                   <span style={{ display: 'block' }}>{footer.brandLine2}</span>
                 </h1>
 
-                <p style={{ color: '#A0A0A0', lineHeight: '1.6', fontSize: '0.9rem', maxWidth: '300px', marginTop: '15px' }}>
+                <a
+                  href={footer.unit1.mapLink || "https://maps.app.goo.gl/Sx3MX6EP6HndtSPq9?g_st=aw"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-block',
+                    color: '#A0A0A0',
+                    lineHeight: '1.6',
+                    fontSize: '0.9rem',
+                    maxWidth: '320px',
+                    marginTop: '15px',
+                    textDecoration: 'none',
+                    transition: 'color 0.2s ease',
+                    cursor: 'pointer'
+                  }}
+                  onMouseOver={(e) => { e.currentTarget.style.color = '#FFFFFF'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.color = '#A0A0A0'; }}
+                  title="Open Unit-1 in Google Maps"
+                >
                   <strong style={{ color: '#FFF' }}>Unit-1:</strong> {footer.unit1.address}
-                </p>
+                  <span style={{ display: 'inline-block', marginLeft: '6px', fontSize: '0.8rem', color: '#6B9BD0' }}>↗</span>
+                </a>
               </div>
 
-              <p style={{ color: '#A0A0A0', lineHeight: '1.6', fontSize: '0.9rem', maxWidth: '300px' }}>
+              <a
+                href={footer.unit2.mapLink || "https://maps.app.goo.gl/VXAc7UpvBX72Likc8"}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-block',
+                  color: '#A0A0A0',
+                  lineHeight: '1.6',
+                  fontSize: '0.9rem',
+                  maxWidth: '320px',
+                  textDecoration: 'none',
+                  transition: 'color 0.2s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.color = '#FFFFFF'; }}
+                onMouseOut={(e) => { e.currentTarget.style.color = '#A0A0A0'; }}
+                title="Open Unit-2 in Google Maps"
+              >
                 <strong style={{ color: '#FFF' }}>Unit-2:</strong> {footer.unit2.address}
-              </p>
+                <span style={{ display: 'inline-block', marginLeft: '6px', fontSize: '0.8rem', color: '#6B9BD0' }}>↗</span>
+              </a>
             </div>
 
             {/* COLUMN 2: QUICK LINKS */}
