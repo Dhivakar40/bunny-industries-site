@@ -53,24 +53,12 @@ export default function Footer() {
                 </h1>
 
                 <p style={{ color: '#A0A0A0', lineHeight: '1.6', fontSize: '0.9rem', maxWidth: '300px', marginTop: '15px' }}>
-                  <a href={footer.unit1.mapLink} target="_blank" rel="noopener noreferrer"
-                    style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.3s' }}
-                    onMouseOver={(e) => e.target.style.color = '#FFF'}
-                    onMouseOut={(e) => e.target.style.color = '#A0A0A0'}
-                  >
-                    <strong style={{ color: '#FFF' }}>Unit-1:</strong> {footer.unit1.address}
-                  </a>
+                  <strong style={{ color: '#FFF' }}>Unit-1:</strong> {footer.unit1.address}
                 </p>
               </div>
 
               <p style={{ color: '#A0A0A0', lineHeight: '1.6', fontSize: '0.9rem', maxWidth: '300px' }}>
-                <a href={footer.unit2.mapLink} target="_blank" rel="noopener noreferrer"
-                  style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.3s' }}
-                  onMouseOver={(e) => e.target.style.color = '#FFF'}
-                  onMouseOut={(e) => e.target.style.color = '#A0A0A0'}
-                >
-                  <strong style={{ color: '#FFF' }}>Unit-2:</strong> {footer.unit2.address}
-                </a>
+                <strong style={{ color: '#FFF' }}>Unit-2:</strong> {footer.unit2.address}
               </p>
             </div>
 

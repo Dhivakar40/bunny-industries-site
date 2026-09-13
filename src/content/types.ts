@@ -192,7 +192,6 @@ export interface ContactContent {
 // ── Footer ───────────────────────────────────────────────────
 export interface FooterUnit {
   address: string;         // text
-  mapLink: string;         // text   — Google Maps short link (NOT embed URL)
 }
 
 export interface FooterColumnHeadings {
