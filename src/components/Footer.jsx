@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useContent } from '../context/ContentContext';
 
 // Scroll target IDs for Quick Links — stay hardcoded (unsafe to expose via CMS)
-const QUICK_LINK_IDS = ['hero', 'about', 'sectors', 'infrastructure', 'certifications'];
+const QUICK_LINK_IDS = ['hero', 'about', 'sectors', 'infrastructure', 'clients', 'certifications'];
 
 export default function Footer() {
   const { footer, legal } = useContent();
@@ -86,7 +86,7 @@ export default function Footer() {
                   onMouseOut={(e) => { e.currentTarget.style.color = '#A0A0A0'; }}
                   title="Open Unit-1 in Google Maps"
                 >
-                  <strong style={{ color: '#FFF' }}>Unit-1:</strong> {footer.unit1.address}
+                  <strong style={{ color: '#FFF' }}>{footer.unit1.label || 'Unit-1'}:</strong> {footer.unit1.address}
                   <span style={{ display: 'inline-block', marginLeft: '6px', fontSize: '0.8rem', color: '#6B9BD0' }}>↗</span>
                 </a>
               </div>
@@ -109,7 +109,7 @@ export default function Footer() {
                 onMouseOut={(e) => { e.currentTarget.style.color = '#A0A0A0'; }}
                 title="Open Unit-2 in Google Maps"
               >
-                <strong style={{ color: '#FFF' }}>Unit-2:</strong> {footer.unit2.address}
+                <strong style={{ color: '#FFF' }}>{footer.unit2.label || 'Unit-2'}:</strong> {footer.unit2.address}
                 <span style={{ display: 'inline-block', marginLeft: '6px', fontSize: '0.8rem', color: '#6B9BD0' }}>↗</span>
               </a>
             </div>

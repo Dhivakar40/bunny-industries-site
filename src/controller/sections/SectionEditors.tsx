@@ -291,11 +291,13 @@ export function FooterSection() {
       </div>
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', margin: '16px 0', paddingTop: '16px' }}>
         <div style={{ fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#6A6E7A', marginBottom: '12px' }}>Unit 1</div>
+        <TextField label="Unit 1 Label" value={f.unit1.label || ''} onChange={v => patch('unit1', { ...f.unit1, label: v })} hint="e.g. BUNNY UNIT-1" />
         <TextField label="Unit 1 Address" value={f.unit1.address} onChange={v => patch('unit1', { ...f.unit1, address: v })} />
         <TextField label="Unit 1 Google Maps Link" value={f.unit1.mapLink || ''} onChange={v => patch('unit1', { ...f.unit1, mapLink: v })} hint="URL opened when clicking the Unit 1 address" />
       </div>
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', margin: '16px 0', paddingTop: '16px' }}>
         <div style={{ fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#6A6E7A', marginBottom: '12px' }}>Unit 2</div>
+        <TextField label="Unit 2 Label" value={f.unit2.label || ''} onChange={v => patch('unit2', { ...f.unit2, label: v })} hint="e.g. BUNNY UNIT-2" />
         <TextField label="Unit 2 Address" value={f.unit2.address} onChange={v => patch('unit2', { ...f.unit2, address: v })} />
         <TextField label="Unit 2 Google Maps Link" value={f.unit2.mapLink || ''} onChange={v => patch('unit2', { ...f.unit2, mapLink: v })} hint="URL opened when clicking the Unit 2 address" />
       </div>

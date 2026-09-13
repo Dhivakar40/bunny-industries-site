@@ -37,31 +37,31 @@
     "titleLine2": "INDUSTRIES",
     "tagline": "PRECISION MANUFACTURING EXCELLENCE",
     "slideshowImages": [
-      "/bunnybg1.jpeg",
-      "/bunnybg2.jpeg",
-      "/bunnybg3.jpeg"
+      "https://dgmoij6awx5wsetk.public.blob.vercel-storage.com/Screenshot%202026-09-12%20155317.png",
+      "https://dgmoij6awx5wsetk.public.blob.vercel-storage.com/Screenshot%202026-09-12%20155300.png",
+      "https://dgmoij6awx5wsetk.public.blob.vercel-storage.com/Screenshot%202026-09-12%20155333.png"
     ],
     "slideshowIntervalMs": 3500
   },
   "about": {
     "eyebrow": "About Bunny Industries",
     "heading": "ENGINEERING EXCELLENCE BUILT ON TRUST",
-    "paragraph1": "Established in 2015 under the leadership of Founder & Proprietor Mr. Varatharajaperumal S, Bunny Industries has grown into a trusted name in precision engineering and high-quality manufacturing.<strong> Over a decade of steady growth, </strong>we have partnered with industry leaders across diverse sectors, earning a reputation for mechanical excellence, technical innovation, and operational reliability.",
-    "paragraph2": "Driven by a dedicated team of <strong>over 25 skilled employees</strong>, Bunny Industries achieved a financial turnover of ₹ 4.5 Crores for the financial year 2025–2026, reflecting our strong market presence and continuous scaling capabilities.",
+    "paragraph1": "Established in 2015\nunder the leadership of Founder &amp; Proprietor Mr. Varatharajaperumal S,\nBunny Industries has grown into a trusted precision engineering and\nmanufacturing partner for industry leaders. Located in the strategic industrial\ncorridor of Hosur, Tamil Nadu, we engineer high-precision machined components\nto meet the rigorous tolerances demanded by global customers. Backed by a\nskilled workforce and technical specialists, Bunny Industries achieved an\nannual turnover of ₹4.5 Crores in FY 2025–26, demonstrating strong market\npresence and continuous scaling capabilities.\n\n",
+    "paragraph2": "",
     "qualityBannerHeading": "Robust Quality Management",
     "qualityBannerBody": "\"Operating under strict quality management systems, our facility is <strong>ISO 9001:2015 certificate </strong>and holds a <strong>ZED Silver Certificate, </strong>reflecting our commitment to zero-defect manufacturing and sustainable practices\"",
     "cards": [
       {
-        "title": "OUR MISSION",
-        "body": "Premium-grade precision components that empower client supply chains with reliability, structural safety and efficiency."
+        "title": "OUR VISION",
+        "body": "To be a leader in Manufacture of highly Precision Machined Components, Delivering Flawless High Precision Tooling and unparalleled services."
       },
       {
-        "title": "OUR VISION",
-        "body": "To be a global benchmark in smart precision engineering, powering the next generation of industrial growth."
+        "title": "OUR MISSION",
+        "body": "To deliver zero-defect precision machined components on time, every time, through continually improving the Process, Product and System & powering next-generation industrial growth."
       },
       {
         "title": "OUR VALUES",
-        "body": "Safety, Precision, Integrity and Continuous Improvement across every process, every shift."
+        "body": "• Zero Defect  • Micron Precision • Collaboration to reach shared goals         • Lead with integrity • Empowering Leadership • Adaptability Staying flexible"
       }
     ]
   },
@@ -73,34 +73,125 @@
       {
         "id": "01",
         "title": "AEROSPACE",
-        "desc": "Flight-critical engineering. Our components meet the rigorous safety and precision standards required for commercial aviation and defense sectors.",
+        "desc": "",
         "image": "flight.jpeg"
       },
       {
         "id": "02",
         "title": "MEDICAL",
-        "desc": "Precision that saves lives. We fabricate ultra-precise, sterile-ready components for next-generation surgical robots and medical devices.",
+        "desc": "",
         "image": "medi.png"
       },
       {
         "id": "03",
         "title": "SEMI-CONDUCTOR",
-        "desc": "Ultra-high precision for electronics. We machine pristine, critical components designed for complex semiconductor manufacturing equipment.",
+        "desc": "",
         "image": "semicond.png"
       },
       {
         "id": "04",
         "title": "INDUSTRIAL MACHINERY",
-        "desc": "Powering global manufacturing. We deliver heavy-duty, durable parts designed to withstand extreme loads and continuous industrial demands.",
+        "desc": "",
         "image": "industrial.png"
       }
     ]
   },
   "portfolio": {
     "heading": "INFRASTRUCTURE",
-    "qaSubtitle": "Zero-Defect Quality Discipline Backed by Advanced Measurement Systems",
-    "subtext": "Operating under Quality Management System compliance to an ISO 9001:2015 and ZED certification (Silver) by MSME, our dedicated Quality Assurance System & Metrology lab is equipped with cutting-edge 3D and optical measuring instruments to ensure complete conformance to engineering specifications.",
+    "subtext": "We are a full-service contract manufacturer. Our facility is equipped to handle every stage of production, from raw material to finished, heat-treated precision components.",
     "infraHeading": "MACHINE INFRASTRUCTURE",
+    "viewMoreLabel": "View Full Capability List",
+    "viewLessLabel": "View Less Capabilities",
+    "infraViewMoreLabel": "View All 17 Equipment Types",
+    "infraViewLessLabel": "View Less Equipment",
+    "projects": [
+      {
+        "id": 1,
+        "title": "VMC",
+        "desc": "Premium VMCs from Doosan and Haas with capacities up to 1.2 meters, featuring advanced 4+1 Axis machining for complex geometries and tight tolerances.",
+        "img": "/vmc_machine.png"
+      },
+      {
+        "id": 2,
+        "title": "CNC Turning & Turnmill",
+        "desc": "Advanced LMW CNC Turning Centers and dedicated Turn-Mill Center engineered for high-precision cylindrical parts, threading, and high-volume production runs.",
+        "img": "/cnc_machine.png"
+      },
+      {
+        "id": 3,
+        "title": "EDM Wire Cutting",
+        "desc": "High-precision Excon Wire Cut EDM machines with a 350 x 450 x 450 mm envelope for intricate profiles, tight radii, and hardened exotic conductive alloys.",
+        "img": "/wire_cutting_machine.png"
+      },
+      {
+        "id": 4,
+        "title": "EDM Sinker",
+        "desc": "Electronica Spark Erosion EDM setups delivering micro-level accuracy and fine surface finish on complex, hard-to-machine components without inducing mechanical stress.",
+        "img": "/sparking_machine.png"
+      },
+      {
+        "id": 5,
+        "title": "Conventional Machineries",
+        "desc": "Tool Room & Conventional Machinery\tComprehensive secondary operations support:  Milling Machines, Surface Grinders, Jig Borers, Precision Tapping Machine, and a Conventional Lathe.",
+        "img": "/vertical_milling_machine.png"
+      }
+    ],
+    "machines": [
+      {
+        "category": "VMC",
+        "img": "/vmc_machine.png",
+        "count": 4,
+        "items": [
+          {
+            "make": "Capacities up to 1.2 meters, featuring advanced 4+1 Axis machining.",
+            "capacity": "",
+            "count": 1
+          },
+          {
+            "make": "",
+            "capacity": "",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "category": "CNC",
+        "img": "/cnc_machine.png",
+        "count": 6,
+        "items": [
+          {
+            "make": "Engineered for high-precision cylindrical parts, threading, and high-volume production runs.",
+            "capacity": "",
+            "count": 2
+          }
+        ]
+      },
+      {
+        "category": "WIRECUTTING",
+        "img": "/wire_cutting_machine.png",
+        "count": 2,
+        "items": [
+          {
+            "make": "High-precision Excon Wire Cut EDM machines with a 350 x 450 x 450 mm envelope.",
+            "capacity": "",
+            "count": 2
+          }
+        ]
+      },
+      {
+        "category": "SPARKING",
+        "img": "/sparking_machine.png",
+        "count": 1,
+        "items": [
+          {
+            "make": "Delivering micro-level accuracy and fine surface finish on complex components.",
+            "capacity": "",
+            "count": 1
+          }
+        ]
+      }
+    ],
+    "qaSubtitle": "Zero-Defect Quality Discipline Backed by Advanced Measurement Systems",
     "qaInstruments": [
       {
         "name": "Carl Zeiss CMM",
@@ -118,71 +209,6 @@
         "name": "Standard Metrology",
         "desc": "Comprehensive range of calibrated bore gauges, slip gauge sets, pin gauges, micrometers & verniers."
       }
-    ],
-    "machines": [
-      {
-        "category": "VMC",
-        "img": "/vmc_machine.png",
-        "count": 4,
-        "items": [
-          {
-            "make": "HASS",
-            "capacity": "762x508x508MM",
-            "count": 1
-          },
-          {
-            "make": "BFW",
-            "capacity": "700x400x400MM",
-            "count": 1
-          },
-          {
-            "make": "DHOOSAN",
-            "capacity": "1500x670x625MM",
-            "count": 1
-          },
-          {
-            "make": "BATLIBAI",
-            "capacity": "950x520x480MM",
-            "count": 1
-          }
-        ]
-      },
-      {
-        "category": "CNC",
-        "img": "/cnc_machine.png",
-        "count": 2,
-        "items": [
-          {
-            "make": "LMW",
-            "capacity": "Ø160x250MM",
-            "count": 2
-          }
-        ]
-      },
-      {
-        "category": "WIRECUTTING",
-        "img": "/wire_cutting_machine.png",
-        "count": 2,
-        "items": [
-          {
-            "make": "EXCON",
-            "capacity": "350x450x450MM",
-            "count": 2
-          }
-        ]
-      },
-      {
-        "category": "SPARKING",
-        "img": "/sparking_machine.png",
-        "count": 1,
-        "items": [
-          {
-            "make": "ELECTRONICA",
-            "capacity": "400x300x400MM",
-            "count": 1
-          }
-        ]
-      }
     ]
   },
   "clients": {
@@ -192,25 +218,11 @@
     "cardLabel": "Products Supplied:",
     "clientList": [
       {
-        "name": "M/s Armor Plast Private Limited",
-        "logo": "/armor_plast_logo.png",
-        "location": "Bangalore",
-        "products": "1) Mould Components and 2) Electrode",
-        "since": "2021"
-      },
-      {
         "name": "M/s Hubbell Services Private Limited",
         "logo": "/hubbell_logo.png",
         "location": "Chennai",
         "products": "VMC Fixtures",
-        "since": "2024"
-      },
-      {
-        "name": "Hya tech Private Limited",
-        "logo": "/hya_tech_logo.png",
-        "location": "Hosur",
-        "products": "Fixtures and Pins",
-        "since": "2024"
+        "since": "2021"
       },
       {
         "name": "ICAM Solutions Private Limited",
@@ -231,28 +243,14 @@
         "logo": "/narasipur_logo.png",
         "location": "Bangalore",
         "products": "Fixtures and Machined Components",
-        "since": "2022"
+        "since": "2021"
       },
       {
         "name": "Manufactec Solutions India Private Limited",
         "logo": "/placeholder_logo.png",
         "location": "Hosur",
         "products": "Automotive Components",
-        "since": "2022"
-      },
-      {
-        "name": "Rikki Plastics Private Limited",
-        "logo": "/rikki_plastics_logo.png",
-        "location": "Hosur",
-        "products": "1) Mould Components and 2) Electrode",
-        "since": "2021"
-      },
-      {
-        "name": "STS manufacturing Private Limited",
-        "logo": "/sts_mfg_logo.png",
-        "location": "Hosur",
-        "products": "VMC Machined Components",
-        "since": "2021"
+        "since": "2015"
       },
       {
         "name": "Tata Electronics Private Limited",
@@ -262,32 +260,18 @@
         "since": "2021"
       },
       {
-        "name": "TEAM Auto Tech India Pvt Ltd",
-        "logo": "/team_auto_tech_logo.png",
-        "location": "Hosur",
-        "products": "Machined Components",
-        "since": "2024"
-      },
-      {
-        "name": "Vithram India",
-        "logo": "/vithram_logo.png",
-        "location": "Coimbatore",
-        "products": "Machined Components",
-        "since": "2020"
-      },
-      {
         "name": "Schaeffler India Limited",
         "logo": "/schaeffler_logo.png",
         "location": "Hosur",
         "products": "Fixtures & Machined Components",
-        "since": "2025"
+        "since": "2015"
       },
       {
         "name": "Rangsons Aerospace Private Limited",
         "logo": "/rangsons_logo.png",
         "location": "Bangalore",
         "products": "Fixtures & Aerospace Components",
-        "since": "2025"
+        "since": "2024"
       },
       {
         "name": "Laversab India Aviation Private Limited",
@@ -323,38 +307,42 @@
       {
         "text": "ZED Silver",
         "desc": "MSME Sustainable Certification",
-        "img": "zed_silver_icon.svg",
+        "img": "https://dgmoij6awx5wsetk.public.blob.vercel-storage.com/ChatGPT%20Image%20Sep%2013%2C%202026%2C%2012_06_53%20PM.png",
         "color": "#C0C0C0",
         "pdf": "/bunny_zed_silver_cert.pdf"
       },
       {
-        "text": "BSA ISO 9001",
+        "text": "ISO 9001:2015",
         "desc": "Certificate of Compliance",
-        "img": "bsa_icon.svg",
+        "img": "https://dgmoij6awx5wsetk.public.blob.vercel-storage.com/WhatsApp_Image_2026-09-12_at_10.24.23_PM-removebg-preview.png",
         "color": "#E74C3C",
         "pdf": "/bunny_iso_cert.pdf"
       }
     ],
     "qualityFocusPoints": [
       {
-        "title": "Customer Satisfaction",
-        "desc": "Achieved through consistent product quality and service excellence."
+        "title": "Precision Excellence",
+        "desc": "Tight-tolerance CNC, VMC & EDM execution for critical applications."
       },
       {
-        "title": "Risk-Based Thinking",
-        "desc": "Adopting a proactive process approach to mitigate risks."
+        "title": "Innovative Solutions",
+        "desc": "Continuous investment in advanced CAD/CAM software & modern machine tools."
       },
       {
-        "title": "Continuous Improvement",
-        "desc": "Relentless optimization of manufacturing and quality systems."
+        "title": "Reliable Partnership",
+        "desc": "Over a decade of dependable, on-time delivery records & consistent quality."
       },
       {
-        "title": "Regulatory Compliance",
-        "desc": "Strict adherence to statutory and regulatory requirements."
+        "title": "Industry Expertise",
+        "desc": "Proven track record across aerospace, medical & semiconductor programs."
       },
       {
-        "title": "Documentation & Control",
-        "desc": "Complete traceability and rigorous control of records."
+        "title": "One-Stop Solution",
+        "desc": "Raw material to finished, inspected part — all under one unified roof."
+      },
+      {
+        "title": "Customer-Centric",
+        "desc": "Acting as a seamless, transparent technical extension of your engineering team."
       }
     ]
   },
@@ -376,20 +364,22 @@
     "copyrightLine": "© 2026 Bunny Industries.",
     "emailAddress": "bunnyindustries_hsr@yahoo.in",
     "whatsappNumber": "919364360603",
-    "whatsappMessage": "Hello Bunny Industries, I would like to inquire about your precision manufacturing services.",
     "formSubmissionEmail": "bunnyindustries_hsr@yahoo.in",
     "emailTemplateSubject": "Official Service Request: {name}",
     "emailTemplateHeader": "FORMAL SERVICE REQUEST - BUNNY INDUSTRIES",
-    "emailFooterNote": "Note to IMS Admin: Please reply directly to the sender's email to acknowledge receipt and proceed with the inquiry."
+    "emailFooterNote": "Note to IMS Admin: Please reply directly to the sender's email to acknowledge receipt and proceed with the inquiry.",
+    "whatsappMessage": "Hello Bunny Industries, I would like to inquire about your precision manufacturing services."
   },
   "footer": {
     "brandLine1": "BUNNY",
     "brandLine2": "INDUSTRIES",
     "unit1": {
+      "label": "BUNNY UNIT-1",
       "address": "SIDCO Industrial Estate Phase-1, Hosur-635126, Tamil Nadu, India.",
       "mapLink": "https://maps.app.goo.gl/Sx3MX6EP6HndtSPq9?g_st=aw"
     },
     "unit2": {
+      "label": "BUNNY UNIT-2",
       "address": "2/2, VTR Road, SF No. 185/2A, Door No. 185/2, Thiruvalluvar Nagar, Zuzuvadi, Hosur-635126.",
       "mapLink": "https://maps.app.goo.gl/VXAc7UpvBX72Likc8"
     },
@@ -416,6 +406,9 @@
       },
       {
         "label": "Infrastructure"
+      },
+      {
+        "label": "Valued Customers"
       },
       {
         "label": "Certifications"

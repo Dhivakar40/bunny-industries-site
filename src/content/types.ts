@@ -113,6 +113,8 @@ export interface PortfolioContent {
   qaInstruments: QaInstrument[]; // array — 4 measurement instruments
   viewMoreLabel?: string;  // text (optional legacy)
   viewLessLabel?: string;  // text (optional legacy)
+  infraViewMoreLabel?: string; // text (optional legacy)
+  infraViewLessLabel?: string; // text (optional legacy)
   projects?: CapabilityProject[]; // array (optional legacy)
   machines: MachineCategory[];   // array — machine infrastructure categories
 }
@@ -198,6 +200,7 @@ export interface ContactContent {
 
 // ── Footer ───────────────────────────────────────────────────
 export interface FooterUnit {
+  label?: string;          // text   — e.g. "BUNNY UNIT-1"
   address: string;         // text
   mapLink?: string;        // text   — Google Maps link URL
 }

@@ -74,6 +74,22 @@ function mergeContent(saved: Partial<SiteContent>): SiteContent {
     if (merged.footer.unit2 && !merged.footer.unit2.mapLink) {
       merged.footer.unit2.mapLink = defaultContent.footer.unit2.mapLink;
     }
+    // Ensure footer quickLinks includes "Valued Customers"
+    if (Array.isArray(merged.footer.quickLinks)) {
+      const hasValuedCustomers = merged.footer.quickLinks.some(
+        (item) => item.label.toUpperCase().includes('CUSTOMER') || item.label.toUpperCase().includes('CLIENT')
+      );
+      if (!hasValuedCustomers) {
+        const infraIndex = merged.footer.quickLinks.findIndex(
+          (item) => item.label.toUpperCase().includes('INFRA')
+        );
+        if (infraIndex !== -1) {
+          merged.footer.quickLinks.splice(infraIndex + 1, 0, { label: 'Valued Customers' });
+        } else {
+          merged.footer.quickLinks.push({ label: 'Valued Customers' });
+        }
+      }
+    }
   }
 
   return merged;
