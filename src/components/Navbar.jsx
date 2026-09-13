@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useContent } from '../context/ContentContext';
 
 // --- Scroll target IDs stay hardcoded (unsafe to expose via CMS) ---
-const NAV_TARGET_IDS = ['about', 'sectors', 'portfolio', 'infrastructure', 'clients', 'certifications'];
+const NAV_TARGET_IDS = ['about', 'sectors', 'infrastructure', 'clients', 'certifications'];
 
 import portfolioPDF from '../assets/portfolio.pdf';
 
@@ -36,7 +36,7 @@ export default function Navbar() {
     setMenuOpen(false);
     const element = document.getElementById(targetId);
     if (element) {
-      window.scrollTo({ top: element.offsetTop - 100, behavior: 'smooth' });
+      window.scrollTo({ top: element.offsetTop - 90, behavior: 'smooth' });
     }
   };
 
@@ -57,16 +57,18 @@ export default function Navbar() {
           left: 0,
           width: '100%',
           zIndex: 100,
-          padding: isScrolled ? '20px 40px' : '25px 40px',
-          background: isScrolled ? 'rgba(15, 17, 21, 0.85)' : 'transparent',
-          backdropFilter: isScrolled ? 'blur(20px) saturate(180%)' : 'none',
+          padding: isMobile ? '12px 18px' : (isScrolled ? '12px 35px' : '16px 40px'),
+          background: isScrolled ? 'rgba(10, 13, 18, 0.96)' : 'rgba(13, 17, 24, 0.88)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
           borderBottom: '1px solid',
-          borderBottomColor: isScrolled ? 'rgba(255,255,255,0.1)' : 'transparent',
+          borderBottomColor: isScrolled ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.12)',
+          boxShadow: isScrolled ? '0 12px 36px rgba(0,0,0,0.7)' : '0 4px 25px rgba(0,0,0,0.45)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '30px',
-          transition: 'padding 0.4s ease, background-color 0.4s ease, border-bottom-color 0.4s ease, backdrop-filter 0.4s ease'
+          gap: isMobile ? '15px' : '30px',
+          transition: 'padding 0.3s ease, background-color 0.3s ease, border-bottom-color 0.3s ease, box-shadow 0.3s ease'
         }}
       >
         {/* --- LEFT: BRAND LOGO --- */}
@@ -76,14 +78,16 @@ export default function Navbar() {
             style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', zIndex: 201 }}
           >
             <img
-              src="/bunnylogo.png"
+              src="/bunny_header_badge.png"
               alt={navbar.logoAlt}
               style={{
-                height: isScrolled ? '45px' : '55px',
+                height: isMobile ? '46px' : (isScrolled ? '62px' : '74px'),
+                maxWidth: isMobile ? '280px' : '420px',
                 width: 'auto',
+                objectFit: 'contain',
                 display: 'block',
-                transition: 'height 0.3s ease, filter 0.3s ease',
-                filter: 'drop-shadow(0px 0px 12px rgba(255, 255, 255, 0.7))'
+                transition: 'all 0.3s ease',
+                filter: 'drop-shadow(0px 3px 12px rgba(0, 0, 0, 0.7))'
               }}
             />
           </div>
@@ -94,17 +98,17 @@ export default function Navbar() {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <ul style={{
               display: 'flex',
-              gap: '20px',
+              gap: '18px',
               listStyle: 'none',
               margin: 0,
-              padding: '0 25px',
+              padding: '0 24px',
               height: '46px',
               alignItems: 'center',
-              border: '1px solid rgba(255,255,255,0.4)',
+              border: '1px solid rgba(255,255,255,0.22)',
               borderRadius: '50px',
-              backgroundColor: 'rgba(255,255,255,0.06)',
-              backdropFilter: 'blur(5px)',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
+              backgroundColor: 'rgba(20, 26, 36, 0.82)',
+              backdropFilter: 'blur(10px)',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.35)'
             }}>
               {navbar.navItems.map((item, index) => (
                 <li key={item.label} style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
@@ -214,14 +218,21 @@ export default function Navbar() {
             <button
               onClick={() => setMenuOpen(true)}
               style={{
-                background: 'transparent',
-                border: 'none',
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.25)',
+                borderRadius: '8px',
                 color: '#FFF',
-                fontSize: '1.5rem',
+                fontSize: '1.3rem',
                 cursor: 'pointer',
                 zIndex: 202,
-                padding: '5px'
+                padding: '6px 14px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
               }}
+              aria-label="Toggle navigation menu"
             >
               ☰
             </button>

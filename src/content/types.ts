@@ -79,7 +79,12 @@ export interface ServicesContent {
   capabilities: [Capability, Capability, Capability, Capability]; // array — exactly 4
 }
 
-// ── Portfolio (Machineries + Infrastructure) ─────────────────
+// ── Infrastructure (Metrology + Machineries) ─────────────────
+export interface QaInstrument {
+  name: string;            // text   — e.g. "Carl Zeiss CMM"
+  desc: string;            // text   — description of instrument/capability
+}
+
 export interface CapabilityProject {
   id: number;              // number — card index
   title: string;           // text
@@ -95,19 +100,21 @@ export interface MachineItem {
 
 export interface MachineCategory {
   category: string;        // text   — display name
-  img: string;             // image  — public-folder URL (shared with projects where applicable)
+  img: string;             // image  — public-folder URL
   count: number;           // number — total unit count
   items: MachineItem[];    // array  — 1–4 entries
 }
 
 export interface PortfolioContent {
-  heading: string;         // text
-  subtext: string;         // text
-  infraHeading: string;    // text
-  viewMoreLabel: string;   // text
-  viewLessLabel: string;   // text
-  projects: CapabilityProject[]; // array — 5 items
-  machines: MachineCategory[];   // array — 17 items
+  heading: string;         // text   — "INFRASTRUCTURE"
+  qaSubtitle: string;      // text   — "Zero-Defect Quality Discipline Backed by Advanced Measurement Systems"
+  subtext: string;         // text   — metrology / lab paragraph description
+  infraHeading: string;    // text   — "MACHINE INFRASTRUCTURE"
+  qaInstruments: QaInstrument[]; // array — 4 measurement instruments
+  viewMoreLabel?: string;  // text (optional legacy)
+  viewLessLabel?: string;  // text (optional legacy)
+  projects?: CapabilityProject[]; // array (optional legacy)
+  machines: MachineCategory[];   // array — machine infrastructure categories
 }
 
 // ── Clients ──────────────────────────────────────────────────

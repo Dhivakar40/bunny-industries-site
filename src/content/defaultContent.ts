@@ -7,12 +7,10 @@ import type { SiteContent } from './types';
 //  to localStorage under 'bunny-cms-content'; the ContentContext
 //  merges those over this object at runtime.
 //
-//  NOTE on shared image paths (per Phase 2 decision):
+//  NOTE on image paths:
 //  vmc_machine.png, cnc_machine.png, wire_cutting_machine.png,
-//  sparking_machine.png, vertical_milling_machine.png each appear
-//  in both `portfolio.projects` and `portfolio.machines`. They
-//  reference the same public-folder path string — editing in the
-//  CMS updates both usages simultaneously.
+//  sparking_machine.png, vertical_milling_machine.png appear
+//  in `portfolio.machines`. They reference the public-folder path string.
 // ============================================================
 
 const defaultContent: SiteContent = {
@@ -40,7 +38,6 @@ const defaultContent: SiteContent = {
     navItems: [
       { label: "ABOUT US" },
       { label: "SECTORS" },
-      { label: "SERVICES" },
       { label: "INFRASTRUCTURE" },
       { label: "CLIENTS" },
       { label: "CERTIFICATIONS" }
@@ -117,43 +114,28 @@ const defaultContent: SiteContent = {
     ]
   },
 
-  // ── Portfolio ────────────────────────────────────────────────
+  // ── Infrastructure (formerly Portfolio) ──────────────────────
   portfolio: {
-    heading: "Machineries & Equipments",
-    subtext: "We are a full-service contract manufacturer. Our facility is equipped to handle every stage of production, from raw material to finished, heat-treated precision components.",
+    heading: "INFRASTRUCTURE",
+    qaSubtitle: "Zero-Defect Quality Discipline Backed by Advanced Measurement Systems",
+    subtext: "Operating under Quality Management System compliance to an ISO 9001:2015 and ZED certification (Silver) by MSME, our dedicated Quality Assurance System & Metrology lab is equipped with cutting-edge 3D and optical measuring instruments to ensure complete conformance to engineering specifications.",
     infraHeading: "MACHINE INFRASTRUCTURE",
-    viewMoreLabel: "View Full Capability List",
-    viewLessLabel: "View Less Capabilities",
-    projects: [
+    qaInstruments: [
       {
-        id: 1,
-        title: "VMC",
-        desc: "Five premium VMC machines (Doosan & Haas) featuring advanced 4+1 axis machining and capacities up to 1.2m for large-scale, high-precision projects.",
-        img: "/vmc_machine.png"
+        name: "Carl Zeiss CMM",
+        desc: "3D Coordinate Measuring Machine for GD&T verification, profile analysis & 3D coordinate checks."
       },
       {
-        id: 2,
-        title: "CNC Turning & Turnmill",
-        desc: "Complementing our milling operations, we utilize five advanced LMW CNC turning centers and one turn-mill engineered for absolute high-volume efficiency.",
-        img: "/cnc_machine.png"
+        name: "ATQ VMM",
+        desc: "Optical Video Measuring Machine for non-contact 2D micro-geometry, pitch, and profile inspection."
       },
       {
-        id: 3,
-        title: "EDM Wire Cutting",
-        desc: "Two high-precision Excon Wire EDM machines (350x450x450mm capacity) utilized to effortlessly execute complex geometries and intricate profiles.",
-        img: "/wire_cutting_machine.png"
+        name: "Tesa Height Master",
+        desc: "Ultra-precise digital height gauge system for reliable height, step, and flatness dimensioning."
       },
       {
-        id: 4,
-        title: "EDM Sparking",
-        desc: "Advanced Electronica spark erosion technology delivering micro-level accuracy and pristine surface finishes on complex, hard-to-machine components.",
-        img: "/sparking_machine.png"
-      },
-      {
-        id: 5,
-        title: "Conventional Machineries",
-        desc: "A versatile lineup of secondary machinery—including 3 milling machines, 3 surface grinders, 3 jig borers, and lathe operations—for comprehensive toolroom support.",
-        img: "/vertical_milling_machine.png"
+        name: "Standard Metrology",
+        desc: "Comprehensive range of calibrated bore gauges, slip gauge sets, pin gauges, micrometers & verniers."
       }
     ],
     machines: [
@@ -229,11 +211,11 @@ const defaultContent: SiteContent = {
     qualityBody: "Bunny Industries is committed to implementing and maintaining robust quality management systems in line with international standards. Our quality system is aligned with ISO 9001 requirements.",
     certifications: [
       {
-        text: "ISO 9001:2015",
-        metallic: "linear-gradient(135deg, #C0C0C0 0%, #E8E8E8 25%, #A8A8A8 50%, #FFFFFF 75%, #B8B8B8 100%)",
-        desc: "Quality Management System",
-        img: "iso.png",
-        color: "#C0C0C0"
+        text: "UDAYAM REGISTERED",
+        metallic: "linear-gradient(135deg, #FF9933 0%, #FFB366 25%, #E67300 50%, #FFE6CC 75%, #FF9933 100%)",
+        desc: "Ministry of MSME",
+        img: "udyam_icon.svg",
+        color: "#FF9933"
       },
       {
         text: "MSME Registered",
@@ -250,13 +232,6 @@ const defaultContent: SiteContent = {
         img: "zed_silver_icon.svg",
         color: "#C0C0C0",
         pdf: "/bunny_zed_silver_cert.pdf"
-      },
-      {
-        text: "Udyam Registration",
-        desc: "Ministry of MSME",
-        img: "udyam_icon.svg",
-        color: "#FF9933",
-        pdf: "/bunny_msme_cert.pdf"
       },
       {
         text: "BSA ISO 9001",

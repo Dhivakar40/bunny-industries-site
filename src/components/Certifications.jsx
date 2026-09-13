@@ -196,8 +196,8 @@ export default function Certifications() {
             ))}
           </div>
 
-          {/* Row 2 — click-to-open PDF certs */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '40px', width: '100%', maxWidth: '1000px' }}>
+          {/* Row 2 — click-to-open PDF certs (2 cards) */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '40px', width: '100%', maxWidth: '800px' }}>
             {certs.newCertificates.map((cert, index) => (
               <ShrunkenCertLogo key={index} cert={cert} index={index} onClick={() => setSelectedPdf(cert)} />
             ))}

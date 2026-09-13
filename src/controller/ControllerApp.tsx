@@ -34,7 +34,7 @@ const SECTIONS = [
   { key: 'hero',           label: 'Hero'               },
   { key: 'about',          label: 'About'              },
   { key: 'services',       label: 'Sectors'            },
-  { key: 'portfolio',      label: 'Portfolio / Infra'  },
+  { key: 'portfolio',      label: 'Infrastructure'     },
   { key: 'clients',        label: 'Clients'            },
   { key: 'certifications', label: 'Certifications'     },
   { key: 'contact',        label: 'Contact'            },

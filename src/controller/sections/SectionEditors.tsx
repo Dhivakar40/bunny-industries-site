@@ -137,24 +137,20 @@ export function PortfolioSection() {
   return (
     <div>
       <TextField label="Section Heading" value={p.heading} onChange={v => patch('heading', v)} />
-      <TextField label="Section Subtext" value={p.subtext} onChange={v => patch('subtext', v)} />
-      <TextField label="Infrastructure Sub-Heading" value={p.infraHeading} onChange={v => patch('infraHeading', v)} />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-        <TextField label="Expand Projects Label" value={p.viewMoreLabel} onChange={v => patch('viewMoreLabel', v)} />
-        <TextField label="Collapse Projects Label" value={p.viewLessLabel} onChange={v => patch('viewLessLabel', v)} />
-      </div>
+      <TextField label="Quality Assurance Subtitle" value={p.qaSubtitle || ''} onChange={v => patch('qaSubtitle', v)} hint="e.g. Zero-Defect Quality Discipline Backed by Advanced Measurement Systems" />
+      <LongTextField label="Metrology & Quality Lab Description" value={p.subtext} onChange={v => patch('subtext', v)} hint="Paragraph describing ISO compliance, ZED Silver certification, and metrology lab." />
       <ArrayField
-        label="Capability Cards (Services section)"
-        items={p.projects as any[]}
-        onChange={v => patch('projects', v as any)}
+        label="Quality Assurance & Metrology Instruments"
+        items={(p.qaInstruments || []) as any[]}
+        onChange={v => patch('qaInstruments', v as any)}
         fieldConfig={[
-          { key: 'title', label: 'Title', type: 'text', required: true },
-          { key: 'desc', label: 'Description', type: 'text', required: true },
-          { key: 'img', label: 'Image', type: 'image' },
+          { key: 'name', label: 'Instrument / System Name', type: 'text', required: true },
+          { key: 'desc', label: 'Description / Function', type: 'text', required: true },
         ]}
-        itemLabel={(item) => item.title || 'Project'}
-        newItem={() => ({ id: Date.now(), title: '', desc: '', img: '' })}
+        itemLabel={(item) => item.name || 'Instrument'}
+        newItem={() => ({ name: '', desc: '' })}
       />
+      <TextField label="Infrastructure Sub-Heading" value={p.infraHeading} onChange={v => patch('infraHeading', v)} />
       <ArrayNestedField
         label="Machine Infrastructure Categories"
         items={p.machines}
