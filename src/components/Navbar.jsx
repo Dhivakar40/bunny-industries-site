@@ -34,7 +34,10 @@ export default function Navbar() {
   const scrollToSection = (e, targetId) => {
     e.preventDefault();
     setMenuOpen(false);
-    const element = document.getElementById(targetId) || document.getElementById('infrastructure') || document.getElementById('portfolio');
+    const element =
+      document.getElementById(targetId) ||
+      (targetId === 'clients' ? (document.getElementById('clients') || document.getElementById('customers') || document.getElementById('valued-customers')) : null) ||
+      (targetId === 'infrastructure' ? (document.getElementById('infrastructure') || document.getElementById('portfolio')) : null);
     if (element) {
       window.scrollTo({ top: element.offsetTop - 90, behavior: 'smooth' });
     }
@@ -50,14 +53,22 @@ export default function Navbar() {
     (item) => !item.label.toUpperCase().includes('SERVICE')
   );
 
-  const getTargetId = (label) => {
-    const upper = label.toUpperCase();
+  const getTargetId = (label, index) => {
+    const upper = (label || '').toUpperCase();
     if (upper.includes('ABOUT')) return 'about';
     if (upper.includes('SECTOR')) return 'sectors';
     if (upper.includes('INFRA') || upper.includes('SERVICE') || upper.includes('PORTFOLIO')) return 'infrastructure';
-    if (upper.includes('CLIENT')) return 'clients';
-    if (upper.includes('CERTIF')) return 'certifications';
-    return 'infrastructure';
+    if (
+      upper.includes('CLIENT') ||
+      upper.includes('CUSTOMER') ||
+      upper.includes('VALUED') ||
+      upper.includes('PARTNER') ||
+      upper.includes('GIANT')
+    ) return 'clients';
+    if (upper.includes('CERTIF') || upper.includes('UDYAM') || upper.includes('ISO')) return 'certifications';
+    if (upper.includes('CONTACT') || upper.includes('TALK')) return 'contact';
+    if (index !== undefined && NAV_TARGET_IDS[index]) return NAV_TARGET_IDS[index];
+    return 'clients';
   };
 
   return (
@@ -125,8 +136,8 @@ export default function Navbar() {
               backdropFilter: 'blur(10px)',
               boxShadow: '0 4px 20px rgba(0,0,0,0.35)'
             }}>
-              {activeNavItems.map((item) => {
-                const targetId = getTargetId(item.label);
+              {activeNavItems.map((item, index) => {
+                const targetId = getTargetId(item.label, index);
                 return (
                   <li key={item.label} style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
                     <a
@@ -302,8 +313,8 @@ export default function Navbar() {
               ✕
             </button>
 
-            {activeNavItems.map((item) => {
-              const targetId = getTargetId(item.label);
+            {activeNavItems.map((item, index) => {
+              const targetId = getTargetId(item.label, index);
               return (
                 <a
                   key={item.label}

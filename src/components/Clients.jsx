@@ -149,6 +149,7 @@ export default function Clients() {
   return (
     <section
       id="clients"
+      data-section="customers"
       style={{
         backgroundColor: '#050608',
         padding: '120px 0',
@@ -158,6 +159,8 @@ export default function Clients() {
         width: '100%'
       }}
     >
+      <div id="customers" style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }} />
+      <div id="valued-customers" style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }} />
       {/* Background Subtle Grid & Overlay */}
       <div style={{
         position: 'absolute', inset: 0,

@@ -14,8 +14,23 @@ export default function Footer() {
 
   const closeModal = () => setActiveModal(null);
 
+  const getFooterTargetId = (label, i) => {
+    const upper = (label || '').toUpperCase();
+    if (upper.includes('HOME') || upper.includes('HERO')) return 'hero';
+    if (upper.includes('ABOUT')) return 'about';
+    if (upper.includes('SECTOR')) return 'sectors';
+    if (upper.includes('INFRA') || upper.includes('SERVICE') || upper.includes('PORTFOLIO')) return 'infrastructure';
+    if (upper.includes('CLIENT') || upper.includes('CUSTOMER') || upper.includes('VALUED') || upper.includes('PARTNER')) return 'clients';
+    if (upper.includes('CERTIF')) return 'certifications';
+    if (upper.includes('CONTACT')) return 'contact';
+    return QUICK_LINK_IDS[i] || 'hero';
+  };
+
   const scrollToSection = (id) => {
-    const element = document.getElementById(id);
+    const element =
+      document.getElementById(id) ||
+      (id === 'clients' ? (document.getElementById('clients') || document.getElementById('customers') || document.getElementById('valued-customers')) : null) ||
+      (id === 'infrastructure' ? (document.getElementById('infrastructure') || document.getElementById('portfolio')) : null);
     if (element) {
       window.scrollTo({ top: element.offsetTop - 80, behavior: 'smooth' });
     } else {
@@ -108,7 +123,7 @@ export default function Footer() {
                 {footer.quickLinks.map((item, i) => (
                   <li key={i}>
                     <button
-                      onClick={() => scrollToSection(QUICK_LINK_IDS[i])}
+                      onClick={() => scrollToSection(getFooterTargetId(item.label, i))}
                       style={{ background: 'transparent', border: 'none', color: '#CCC', cursor: 'pointer', fontSize: '0.9rem', textAlign: 'left', padding: 0, transition: 'color 0.3s' }}
                       onMouseOver={(e) => e.target.style.color = '#FFF'}
                       onMouseOut={(e) => e.target.style.color = '#CCC'}

@@ -39,7 +39,7 @@ const defaultContent: SiteContent = {
       { label: "ABOUT US" },
       { label: "SECTORS" },
       { label: "INFRASTRUCTURE" },
-      { label: "CLIENTS" },
+      { label: "VALUED CUSTOMERS" },
       { label: "CERTIFICATIONS" }
     ]
   },

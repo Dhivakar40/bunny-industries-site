@@ -30,11 +30,16 @@ function mergeContent(saved: Partial<SiteContent>): SiteContent {
     }
   });
 
-  // Ensure "SERVICES" is completely removed from navbar
+  // Ensure "SERVICES" is completely removed from navbar and legacy "CLIENTS" is displayed as "VALUED CUSTOMERS"
   if (merged.navbar && Array.isArray(merged.navbar.navItems)) {
-    merged.navbar.navItems = merged.navbar.navItems.filter(
-      (item) => !item.label.toUpperCase().includes('SERVICE')
-    );
+    merged.navbar.navItems = merged.navbar.navItems
+      .filter((item) => !item.label.toUpperCase().includes('SERVICE'))
+      .map((item) => {
+        if (item.label.trim().toUpperCase() === 'CLIENTS') {
+          return { ...item, label: 'VALUED CUSTOMERS' };
+        }
+        return item;
+      });
   }
 
   // Ensure Industry Certifications has exactly 4 cards (2 in row 1, 2 in row 2)
