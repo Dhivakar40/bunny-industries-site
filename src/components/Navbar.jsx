@@ -30,11 +30,11 @@ export default function Navbar() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // 3. Smooth Scroll Logic
+  // 3. Smooth Scroll Logic with fallback
   const scrollToSection = (e, targetId) => {
     e.preventDefault();
     setMenuOpen(false);
-    const element = document.getElementById(targetId);
+    const element = document.getElementById(targetId) || document.getElementById('infrastructure') || document.getElementById('portfolio');
     if (element) {
       window.scrollTo({ top: element.offsetTop - 90, behavior: 'smooth' });
     }
@@ -43,6 +43,21 @@ export default function Navbar() {
   const handleLogoClick = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setMenuOpen(false);
+  };
+
+  // Ensure "SERVICES" is completely excluded from quicklinks
+  const activeNavItems = (navbar.navItems || []).filter(
+    (item) => !item.label.toUpperCase().includes('SERVICE')
+  );
+
+  const getTargetId = (label) => {
+    const upper = label.toUpperCase();
+    if (upper.includes('ABOUT')) return 'about';
+    if (upper.includes('SECTOR')) return 'sectors';
+    if (upper.includes('INFRA') || upper.includes('SERVICE') || upper.includes('PORTFOLIO')) return 'infrastructure';
+    if (upper.includes('CLIENT')) return 'clients';
+    if (upper.includes('CERTIF')) return 'certifications';
+    return 'infrastructure';
   };
 
   return (
@@ -110,44 +125,47 @@ export default function Navbar() {
               backdropFilter: 'blur(10px)',
               boxShadow: '0 4px 20px rgba(0,0,0,0.35)'
             }}>
-              {navbar.navItems.map((item, index) => (
-                <li key={item.label} style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-                  <a
-                    href={`#${NAV_TARGET_IDS[index]}`}
-                    onClick={(e) => scrollToSection(e, NAV_TARGET_IDS[index])}
-                    style={{
-                      color: '#FFFFFF',
-                      textDecoration: 'none',
-                      fontFamily: 'var(--font-sans)',
-                      fontSize: '0.8rem',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.1em',
-                      opacity: 0.95,
-                      transition: 'opacity 0.3s, color 0.3s',
-                      fontWeight: '600',
-                      position: 'relative',
-                      display: 'block',
-                      paddingBottom: '2px',
-                      whiteSpace: 'nowrap'
-                    }}
-                    className="nav-link"
-                    onMouseOver={(e) => { e.target.style.opacity = 1; e.target.style.color = '#6B9BD0'; }}
-                    onMouseOut={(e) => { e.target.style.opacity = 0.95; e.target.style.color = '#FFFFFF'; }}
-                  >
-                    {item.label}
-                    <span style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      width: '0%',
-                      height: '1.5px',
-                      backgroundColor: '#6B9BD0',
-                      transition: 'width 0.3s ease-out'
-                    }} className="hover-underline" />
-                  </a>
-                </li>
-              ))}
+              {activeNavItems.map((item) => {
+                const targetId = getTargetId(item.label);
+                return (
+                  <li key={item.label} style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+                    <a
+                      href={`#${targetId}`}
+                      onClick={(e) => scrollToSection(e, targetId)}
+                      style={{
+                        color: '#FFFFFF',
+                        textDecoration: 'none',
+                        fontFamily: 'var(--font-sans)',
+                        fontSize: '0.8rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.1em',
+                        opacity: 0.95,
+                        transition: 'opacity 0.3s, color 0.3s',
+                        fontWeight: '600',
+                        position: 'relative',
+                        display: 'block',
+                        paddingBottom: '2px',
+                        whiteSpace: 'nowrap'
+                      }}
+                      className="nav-link"
+                      onMouseOver={(e) => { e.target.style.opacity = 1; e.target.style.color = '#6B9BD0'; }}
+                      onMouseOut={(e) => { e.target.style.opacity = 0.95; e.target.style.color = '#FFFFFF'; }}
+                    >
+                      {item.label}
+                      <span style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: '0%',
+                        height: '1.5px',
+                        backgroundColor: '#6B9BD0',
+                        transition: 'width 0.3s ease-out'
+                      }} className="hover-underline" />
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         )}
@@ -284,23 +302,26 @@ export default function Navbar() {
               ✕
             </button>
 
-            {navbar.navItems.map((item, index) => (
-              <a
-                key={item.label}
-                href={`#${NAV_TARGET_IDS[index]}`}
-                onClick={(e) => scrollToSection(e, NAV_TARGET_IDS[index])}
-                style={{
-                  color: '#FFFFFF',
-                  textDecoration: 'none',
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: '2rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em'
-                }}
-              >
-                {item.label}
-              </a>
-            ))}
+            {activeNavItems.map((item) => {
+              const targetId = getTargetId(item.label);
+              return (
+                <a
+                  key={item.label}
+                  href={`#${targetId}`}
+                  onClick={(e) => scrollToSection(e, targetId)}
+                  style={{
+                    color: '#FFFFFF',
+                    textDecoration: 'none',
+                    fontFamily: 'var(--font-serif)',
+                    fontSize: '2rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em'
+                  }}
+                >
+                  {item.label}
+                </a>
+              );
+            })}
 
             {/* MOBILE DUAL ACTION CTAs */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px', width: '80%', maxWidth: '300px' }}>

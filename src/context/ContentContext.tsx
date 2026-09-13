@@ -29,6 +29,38 @@ function mergeContent(saved: Partial<SiteContent>): SiteContent {
       merged[key] = { ...defaultContent[key], ...saved[key] };
     }
   });
+
+  // Ensure "SERVICES" is completely removed from navbar
+  if (merged.navbar && Array.isArray(merged.navbar.navItems)) {
+    merged.navbar.navItems = merged.navbar.navItems.filter(
+      (item) => !item.label.toUpperCase().includes('SERVICE')
+    );
+  }
+
+  // Ensure Industry Certifications has exactly 4 cards (2 in row 1, 2 in row 2)
+  if (merged.certifications) {
+    if (Array.isArray(merged.certifications.certifications)) {
+      merged.certifications.certifications = merged.certifications.certifications.map((c) => {
+        if (c.text === 'ISO 9001:2015' || c.text.toUpperCase().includes('ISO')) {
+          return {
+            ...c,
+            text: 'UDAYAM REGISTERED',
+            desc: 'Ministry of MSME',
+            img: 'udyam_icon.svg',
+            color: '#FF9933',
+            metallic: 'linear-gradient(135deg, #FF9933 0%, #FFB366 25%, #E67300 50%, #FFE6CC 75%, #FF9933 100%)'
+          };
+        }
+        return c;
+      }).slice(0, 2);
+    }
+    if (Array.isArray(merged.certifications.newCertificates)) {
+      merged.certifications.newCertificates = merged.certifications.newCertificates.filter(
+        (c) => !c.text.toLowerCase().includes('udyam')
+      ).slice(0, 2);
+    }
+  }
+
   return merged;
 }
 

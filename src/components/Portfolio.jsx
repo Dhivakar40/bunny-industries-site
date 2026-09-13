@@ -44,6 +44,8 @@ export default function Portfolio() {
       id="infrastructure"
       style={{ backgroundColor: '#0F1115', color: '#FFFFFF', position: 'relative', overflow: 'hidden' }}
     >
+      {/* Anchor for legacy or redirected links */}
+      <div id="portfolio" style={{ position: 'absolute', top: 0, left: 0, height: '1px', width: '1px', pointerEvents: 'none' }} />
       {/* Background Subtle Grid Pattern */}
       <div style={{
         position: 'absolute', inset: 0,

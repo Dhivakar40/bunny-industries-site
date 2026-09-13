@@ -147,6 +147,26 @@ export default function Certifications() {
   const { certifications: certs, theme } = useContent();
   const [selectedPdf, setSelectedPdf] = useState(null);
 
+  // Row 1: exactly 2 cards. Rename ISO 9001:2015 to "UDAYAM REGISTERED"
+  const row1Certs = (certs.certifications || []).map((c) => {
+    if (c.text === 'ISO 9001:2015' || c.text.toUpperCase().includes('ISO')) {
+      return {
+        ...c,
+        text: 'UDAYAM REGISTERED',
+        desc: 'Ministry of MSME',
+        img: 'udyam_icon.svg',
+        color: '#FF9933',
+        metallic: 'linear-gradient(135deg, #FF9933 0%, #FFB366 25%, #E67300 50%, #FFE6CC 75%, #FF9933 100%)'
+      };
+    }
+    return c;
+  }).slice(0, 2);
+
+  // Row 2: exactly 2 cards. Remove Udyam Registration card completely
+  const row2Certs = (certs.newCertificates || []).filter(
+    (c) => !c.text.toLowerCase().includes('udyam')
+  ).slice(0, 2);
+
   return (
     <section
       id="certifications"
@@ -187,18 +207,18 @@ export default function Certifications() {
           </div>
         </div>
 
-        {/* --- LOGOS GRID --- */}
+        {/* --- LOGOS GRID (EXACTLY 4 CARDS: 2 IN ROW 1, 2 IN ROW 2) --- */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '40px', alignItems: 'center' }}>
-          {/* Row 1 — display-only certs */}
+          {/* Row 1 — display-only certs (UDAYAM REGISTERED & MSME Registered) */}
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '40px', width: '100%', maxWidth: '800px' }}>
-            {certs.certifications.map((cert, index) => (
+            {row1Certs.map((cert, index) => (
               <CertLogo key={index} cert={cert} index={index} />
             ))}
           </div>
 
-          {/* Row 2 — click-to-open PDF certs (2 cards) */}
+          {/* Row 2 — click-to-open PDF certs (ZED Silver & BSA ISO 9001) */}
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '40px', width: '100%', maxWidth: '800px' }}>
-            {certs.newCertificates.map((cert, index) => (
+            {row2Certs.map((cert, index) => (
               <ShrunkenCertLogo key={index} cert={cert} index={index} onClick={() => setSelectedPdf(cert)} />
             ))}
           </div>
