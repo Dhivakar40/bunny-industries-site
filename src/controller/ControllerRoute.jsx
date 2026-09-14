@@ -10,34 +10,38 @@ const CONTROLLER_PASSWORD = import.meta.env.VITE_CONTROLLER_PASSWORD ?? '';
 
 const gateStyle = {
   display: 'flex', flexDirection: 'column', alignItems: 'center',
-  justifyContent: 'center', minHeight: '100vh',
+  justifyContent: 'center', minHeight: '100dvh',
   backgroundColor: '#0A0B0E',
   fontFamily: '"Manrope", sans-serif',
-  gap: '24px'
+  gap: '24px',
+  padding: '24px 16px',
+  boxSizing: 'border-box',
+  width: '100%',
 };
 
 const logoStyle = {
   fontSize: '1.8rem', fontFamily: '"Oswald", sans-serif',
-  color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase'
+  color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase',
+  textAlign: 'center',
 };
 
 const subStyle = {
   fontSize: '0.75rem', color: '#555', letterSpacing: '0.2em',
-  textTransform: 'uppercase', marginTop: '-16px'
+  textTransform: 'uppercase', marginTop: '-16px', textAlign: 'center',
 };
 
 const inputStyle = {
-  width: '280px', padding: '14px 18px', background: 'rgba(255,255,255,0.06)',
+  width: '100%', maxWidth: '300px', padding: '14px 18px', background: 'rgba(255,255,255,0.06)',
   border: '1px solid rgba(255,255,255,0.12)', borderRadius: '6px', color: '#FFF',
   fontSize: '0.95rem', outline: 'none', fontFamily: 'inherit',
   letterSpacing: '0.15em', boxSizing: 'border-box'
 };
 
 const btnStyle = {
-  width: '280px', padding: '14px', background: '#6B9BD0', border: 'none',
+  width: '100%', maxWidth: '300px', padding: '14px', background: '#6B9BD0', border: 'none',
   borderRadius: '6px', color: '#000', fontSize: '0.85rem', fontWeight: '700',
   cursor: 'pointer', fontFamily: '"Oswald", sans-serif', letterSpacing: '0.15em',
-  textTransform: 'uppercase', transition: 'opacity 0.2s'
+  textTransform: 'uppercase', transition: 'opacity 0.2s', boxSizing: 'border-box',
 };
 
 const errorStyle = { color: '#E74C3C', fontSize: '0.8rem', letterSpacing: '0.05em' };

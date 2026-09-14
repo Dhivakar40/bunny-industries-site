@@ -89,7 +89,7 @@ export function NumberField({ label, value, onChange, min = 0, max, step = 1, hi
         }}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
-        style={{ ...inputBase, borderColor: focused ? C.borderFocus : C.border, width: '200px' }}
+        style={{ ...inputBase, borderColor: focused ? C.borderFocus : C.border, width: '100%', maxWidth: '240px' }}
       />
     </FieldGroup>
   );
@@ -168,7 +168,7 @@ export function RichTextField({ label, value, onChange, hint }: {
   return (
     <FieldGroup label={label} hint={hint}>
       {/* Toolbar */}
-      <div style={{ display: 'flex', gap: '4px', marginBottom: '4px' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center', marginBottom: '6px' }}>
         {TOOLBAR_ACTIONS.map(({ cmd, label: lbl, style }) => (
           <button
             key={cmd}
@@ -184,7 +184,7 @@ export function RichTextField({ label, value, onChange, hint }: {
             {lbl}
           </button>
         ))}
-        <div style={{ fontSize: '0.65rem', color: C.textMuted, alignSelf: 'center', marginLeft: '6px' }}>
+        <div style={{ fontSize: '0.65rem', color: C.textMuted }}>
           Select text then click Bold/Italic
         </div>
       </div>
@@ -226,18 +226,18 @@ export function ColorField({ label, value, onChange, hint }: {
 
   return (
     <FieldGroup label={label} hint={hint}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
         {/* Native colour picker */}
         <input
           type="color"
           value={isValidHex(raw) ? raw : '#000000'}
           onChange={e => { setRaw(e.target.value); commit(e.target.value); }}
-          style={{ width: '44px', height: '44px', padding: '2px', border: `1px solid ${C.border}`, borderRadius: C.radius, background: 'transparent', cursor: 'pointer' }}
+          style={{ width: '44px', height: '44px', padding: '2px', border: `1px solid ${C.border}`, borderRadius: C.radius, background: 'transparent', cursor: 'pointer', flexShrink: 0 }}
         />
         {/* Live swatch */}
         <div style={{ width: '44px', height: '44px', borderRadius: C.radius, background: isValidHex(raw) ? raw : '#333', border: `1px solid ${C.border}`, flexShrink: 0 }} />
         {/* Hex text input */}
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, minWidth: '130px' }}>
           <input
             type="text"
             value={raw}
@@ -346,24 +346,24 @@ export function ArrayField<T extends ArrayItem>({
           >
             {/* Card header */}
             <div
-              style={{ display: 'flex', alignItems: 'center', padding: '10px 14px', cursor: 'pointer', gap: '10px' }}
+              style={{ display: 'flex', alignItems: 'center', padding: '10px 12px', cursor: 'pointer', gap: '8px' }}
               onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}
             >
-              <span style={{ color: C.textMuted, cursor: 'grab', fontSize: '1rem' }}>⠿</span>
-              <div style={{ flex: 1, fontSize: '0.85rem', color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <span style={{ color: C.textMuted, cursor: 'grab', fontSize: '1rem', flexShrink: 0 }}>⠿</span>
+              <div style={{ flex: 1, minWidth: 0, fontSize: '0.85rem', color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {itemLabel(item, i)}
               </div>
-              <div style={{ display: 'flex', gap: '6px' }}>
+              <div style={{ display: 'flex', gap: '4px', flexShrink: 0 }}>
                 <button onClick={e => { e.stopPropagation(); move(i, i - 1); }} style={miniBtn} title="Move up" disabled={i === 0}>↑</button>
                 <button onClick={e => { e.stopPropagation(); move(i, i + 1); }} style={miniBtn} title="Move down" disabled={i === items.length - 1}>↓</button>
                 <button onClick={e => { e.stopPropagation(); remove(i); }} style={{ ...miniBtn, color: C.danger }} title="Delete">✕</button>
               </div>
-              <span style={{ color: C.textMuted, fontSize: '0.75rem' }}>{expandedIdx === i ? '▲' : '▼'}</span>
+              <span style={{ color: C.textMuted, fontSize: '0.75rem', flexShrink: 0 }}>{expandedIdx === i ? '▲' : '▼'}</span>
             </div>
 
             {/* Expanded fields */}
             {expandedIdx === i && (
-              <div style={{ padding: '16px', borderTop: `1px solid ${C.border}` }}>
+              <div style={{ padding: '14px', borderTop: `1px solid ${C.border}` }}>
                 {fieldConfig.map(fc => {
                   const val = item[fc.key] ?? '';
                   if (fc.type === 'text') return <TextField key={fc.key} label={fc.label} value={String(val)} onChange={v => update(i, fc.key, v)} hint={fc.hint} />;
@@ -385,7 +385,7 @@ export function ArrayField<T extends ArrayItem>({
 
 const miniBtn: React.CSSProperties = {
   background: 'transparent', border: 'none', color: C.textMuted,
-  cursor: 'pointer', padding: '2px 6px', fontSize: '0.75rem',
+  cursor: 'pointer', padding: '3px 6px', fontSize: '0.78rem',
   borderRadius: '3px',
 };
 
@@ -467,19 +467,19 @@ export function ArrayNestedField({ label, items, onChange }: {
             <div key={i} style={{ border: `1px solid ${C.border}`, borderRadius: C.radius, background: C.surface }}>
               {/* Category header */}
               <div
-                style={{ display: 'flex', alignItems: 'center', padding: '10px 14px', cursor: 'pointer', gap: '10px' }}
+                style={{ display: 'flex', alignItems: 'center', padding: '10px 12px', cursor: 'pointer', gap: '8px' }}
                 onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}
               >
-                <div style={{ flex: 1, fontSize: '0.85rem', color: C.text, fontFamily: C.fontDisplay, letterSpacing: '0.05em' }}>
+                <div style={{ flex: 1, minWidth: 0, fontSize: '0.85rem', color: C.text, fontFamily: C.fontDisplay, letterSpacing: '0.05em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {cat.category || <span style={{ color: C.textMuted }}>Unnamed</span>}
-                  <span style={{ color: C.textMuted, fontSize: '0.75rem', marginLeft: '8px' }}>{cat.count} unit(s), {cat.items.length} make(s)</span>
+                  <span style={{ color: C.textMuted, fontSize: '0.72rem', marginLeft: '6px' }}>({cat.count} units, {cat.items.length} makes)</span>
                 </div>
-                <button onClick={e => { e.stopPropagation(); removeCat(i); }} style={{ ...miniBtn, color: C.danger }} title="Delete Category">✕</button>
-                <span style={{ color: C.textMuted, fontSize: '0.75rem' }}>{expandedIdx === i ? '▲' : '▼'}</span>
+                <button onClick={e => { e.stopPropagation(); removeCat(i); }} style={{ ...miniBtn, color: C.danger, flexShrink: 0 }} title="Delete Category">✕</button>
+                <span style={{ color: C.textMuted, fontSize: '0.75rem', flexShrink: 0 }}>{expandedIdx === i ? '▲' : '▼'}</span>
               </div>
 
               {expandedIdx === i && (
-                <div style={{ padding: '16px', borderTop: `1px solid ${C.border}` }}>
+                <div style={{ padding: '14px', borderTop: `1px solid ${C.border}` }}>
                   <TextField label="Category Name" value={cat.category} onChange={v => updateCat(i, 'category', v)} />
                   <ImageField label="Category Image" value={cat.img} onChange={v => updateCat(i, 'img', v)} />
                   <NumberField label="Total Unit Count" value={cat.count} min={1} onChange={v => updateCat(i, 'count', v)} />
@@ -488,19 +488,19 @@ export function ArrayNestedField({ label, items, onChange }: {
                   <div style={{ marginTop: '16px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                       <label style={{ ...labelStyle, margin: 0 }}>Makes / Models</label>
-                      <button onClick={() => addSubItem(i)} style={{ background: C.accent, border: 'none', color: '#000', padding: '4px 10px', borderRadius: C.radius, fontSize: '0.7rem', fontWeight: '700', cursor: 'pointer' }}>
+                      <button onClick={() => addSubItem(i)} style={{ background: C.accent, border: 'none', color: '#000', padding: '4px 10px', borderRadius: C.radius, fontSize: '0.7rem', fontWeight: '700', cursor: 'pointer', flexShrink: 0 }}>
                         + ADD MAKE
                       </button>
                     </div>
                     {cat.items.map((sub, j) => (
                       <div key={j} style={{ border: `1px solid ${C.border}`, borderRadius: C.radius, marginBottom: '6px', background: C.bg }}>
                         <div
-                          style={{ display: 'flex', padding: '8px 12px', cursor: 'pointer', gap: '8px', alignItems: 'center' }}
+                          style={{ display: 'flex', padding: '8px 10px', cursor: 'pointer', gap: '6px', alignItems: 'center' }}
                           onClick={() => setExpandedSubIdx(p => ({ ...p, [i]: p[i] === j ? null : j }))}
                         >
-                          <div style={{ flex: 1, fontSize: '0.8rem', color: C.text }}>{sub.make || <span style={{ color: C.textMuted }}>Unnamed</span>} — {sub.capacity}</div>
-                          <button onClick={e => { e.stopPropagation(); removeSubItem(i, j); }} style={{ ...miniBtn, color: C.danger }}>✕</button>
-                          <span style={{ color: C.textMuted, fontSize: '0.7rem' }}>{expandedSubIdx[i] === j ? '▲' : '▼'}</span>
+                          <div style={{ flex: 1, minWidth: 0, fontSize: '0.8rem', color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sub.make || <span style={{ color: C.textMuted }}>Unnamed</span>} — {sub.capacity}</div>
+                          <button onClick={e => { e.stopPropagation(); removeSubItem(i, j); }} style={{ ...miniBtn, color: C.danger, flexShrink: 0 }}>✕</button>
+                          <span style={{ color: C.textMuted, fontSize: '0.7rem', flexShrink: 0 }}>{expandedSubIdx[i] === j ? '▲' : '▼'}</span>
                         </div>
                         {expandedSubIdx[i] === j && (
                           <div style={{ padding: '12px', borderTop: `1px solid ${C.border}` }}>

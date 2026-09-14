@@ -70,8 +70,11 @@ function validateImport(obj: unknown): obj is Partial<SiteContent> {
 
 // ── Top bar ───────────────────────────────────────────────────
 function TopBar({
-  isDirty, onSave, onExport, onImport, onReset, onUndo, canUndo, onDiscard, previewVisible, setPreviewVisible,
+  isMobile, isDirty, onSave, onExport, onImport, onReset, onUndo, canUndo, onDiscard,
+  previewVisible, setPreviewVisible, mobileView, setMobileView,
+  drawerOpen, setDrawerOpen, moreMenuOpen, setMoreMenuOpen,
 }: {
+  isMobile: boolean;
   isDirty: boolean;
   onSave: () => void;
   onExport: () => void;
@@ -82,7 +85,155 @@ function TopBar({
   onDiscard: () => void;
   previewVisible: boolean;
   setPreviewVisible: (v: boolean) => void;
+  mobileView: 'editor' | 'preview';
+  setMobileView: (v: 'editor' | 'preview') => void;
+  drawerOpen: boolean;
+  setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  moreMenuOpen: boolean;
+  setMoreMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  if (isMobile) {
+    return (
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 12px', height: '52px', flexShrink: 0,
+        background: C.surface, borderBottom: `1px solid ${C.border}`,
+        fontFamily: C.fontSans, position: 'relative', zIndex: 100,
+      }}>
+        {/* Left: Menu toggle + Brand + Status */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+          <button
+            onClick={() => setDrawerOpen(o => !o)}
+            title="Open Sections"
+            aria-label="Open Sections menu"
+            style={{
+              background: drawerOpen ? C.accentDim : 'transparent',
+              border: `1px solid ${drawerOpen ? C.accent : C.border}`,
+              color: drawerOpen ? C.accent : C.text, borderRadius: '6px',
+              width: '34px', height: '34px', display: 'flex', alignItems: 'center',
+              justifyContent: 'center', cursor: 'pointer', fontSize: '1.1rem',
+              flexShrink: 0, padding: 0,
+            }}
+          >
+            ☰
+          </button>
+
+          <div style={{ fontFamily: C.fontDisplay, fontSize: '0.95rem', color: C.text, letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>
+            BUNNY <span style={{ color: C.accent }}>CMS</span>
+          </div>
+
+          <div
+            title={isDirty ? 'Unsaved changes' : 'Saved'}
+            style={{
+              width: '8px', height: '8px', borderRadius: '50%',
+              background: isDirty ? C.warning : C.success, flexShrink: 0,
+            }}
+          />
+        </div>
+
+        {/* Right: View toggle + More actions + Save */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+          {/* Segmented view switcher */}
+          <div style={{
+            display: 'flex', background: 'rgba(0,0,0,0.35)',
+            borderRadius: '6px', padding: '2px', border: `1px solid ${C.border}`,
+          }}>
+            <button
+              onClick={() => setMobileView('editor')}
+              style={{
+                background: mobileView === 'editor' ? C.accentDim : 'transparent',
+                color: mobileView === 'editor' ? C.accent : C.textMuted,
+                border: 'none', borderRadius: '4px', padding: '5px 9px',
+                fontSize: '0.72rem', fontWeight: '700', cursor: 'pointer',
+                fontFamily: C.fontSans, transition: 'all 0.15s',
+              }}
+            >
+              Form
+            </button>
+            <button
+              onClick={() => setMobileView('preview')}
+              style={{
+                background: mobileView === 'preview' ? C.accentDim : 'transparent',
+                color: mobileView === 'preview' ? C.accent : C.textMuted,
+                border: 'none', borderRadius: '4px', padding: '5px 9px',
+                fontSize: '0.72rem', fontWeight: '700', cursor: 'pointer',
+                fontFamily: C.fontSans, transition: 'all 0.15s',
+              }}
+            >
+              Live
+            </button>
+          </div>
+
+          {/* More actions button (⋮) */}
+          <button
+            onClick={() => setMoreMenuOpen(o => !o)}
+            title="More actions"
+            aria-label="More actions"
+            style={{
+              background: moreMenuOpen ? C.accentDim : 'transparent',
+              border: `1px solid ${moreMenuOpen ? C.accent : C.border}`,
+              color: moreMenuOpen ? C.accent : C.text, borderRadius: '6px',
+              width: '32px', height: '32px', display: 'flex', alignItems: 'center',
+              justifyContent: 'center', cursor: 'pointer', fontSize: '1.1rem',
+              padding: 0, flexShrink: 0,
+            }}
+          >
+            ⋮
+          </button>
+
+          {/* SAVE */}
+          <button
+            onClick={onSave}
+            style={{
+              background: isDirty ? C.accent : 'rgba(107,155,208,0.3)',
+              border: 'none', color: isDirty ? '#000' : C.textMuted,
+              padding: '7px 12px', borderRadius: '6px',
+              fontFamily: C.fontDisplay, fontWeight: '700', letterSpacing: '0.08em',
+              fontSize: '0.75rem', cursor: isDirty ? 'pointer' : 'default',
+              transition: 'all 0.2s', flexShrink: 0,
+            }}
+          >
+            SAVE
+          </button>
+        </div>
+
+        {/* More actions dropdown menu */}
+        {moreMenuOpen && (
+          <>
+            <div
+              onClick={() => setMoreMenuOpen(false)}
+              style={{ position: 'fixed', inset: 0, zIndex: 998 }}
+            />
+            <div style={{
+              position: 'absolute', top: '50px', right: '10px', width: '210px',
+              background: C.surface, border: `1px solid ${C.border}`,
+              borderRadius: '8px', boxShadow: '0 12px 32px rgba(0,0,0,0.85)',
+              padding: '6px', zIndex: 999, display: 'flex', flexDirection: 'column', gap: '2px',
+            }}>
+              <MenuBtn onClick={() => { onUndo(); setMoreMenuOpen(false); }} disabled={!canUndo}>
+                ↺ Undo Last Save
+              </MenuBtn>
+              <MenuBtn onClick={() => { onImport(); setMoreMenuOpen(false); }}>
+                ⬇ Import JSON
+              </MenuBtn>
+              <MenuBtn onClick={() => { onExport(); setMoreMenuOpen(false); }}>
+                ⬆ Export JSON
+              </MenuBtn>
+              <div style={{ height: '1px', background: C.border, margin: '4px 0' }} />
+              <MenuBtn onClick={() => { onDiscard(); setMoreMenuOpen(false); }} disabled={!isDirty} danger>
+                ✕ Discard Unsaved Changes
+              </MenuBtn>
+              <MenuBtn onClick={() => { onReset(); setMoreMenuOpen(false); }} danger>
+                ⚠ Factory Reset
+              </MenuBtn>
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
+
+  // Desktop TopBar
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: '10px',
@@ -153,6 +304,29 @@ function TopBtn({ children, onClick, disabled, danger, title }: {
   );
 }
 
+function MenuBtn({ children, onClick, disabled, danger }: {
+  children: React.ReactNode; onClick: () => void; disabled?: boolean; danger?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      style={{
+        width: '100%', textAlign: 'left', background: 'transparent',
+        border: 'none', borderRadius: '4px', padding: '8px 10px',
+        color: danger ? C.danger : disabled ? C.textMuted : C.text,
+        fontSize: '0.78rem', fontFamily: C.fontSans, fontWeight: '500',
+        cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.4 : 1,
+        transition: 'background 0.15s',
+      }}
+      onMouseEnter={e => { if (!disabled) e.currentTarget.style.background = C.surfaceHover; }}
+      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+    >
+      {children}
+    </button>
+  );
+}
+
 // ── Main controller ───────────────────────────────────────────
 export default function ControllerApp() {
   const { content, setContent, patchContent, resetToDefault, canUndo, undo, isSaving, isLoading, lastError, clearError, reloadContent, isReloading } = useContentContext();
@@ -162,6 +336,25 @@ export default function ControllerApp() {
   const [importSuccess, setImportSuccess] = useState('');
   const [confirmReset, setConfirmReset] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(true);
+
+  // Mobile responsiveness state
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 860);
+  const [mobileView, setMobileView] = useState<'editor' | 'preview'>('editor');
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const onResize = () => {
+      const mobile = window.innerWidth < 860;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setDrawerOpen(false);
+        setMoreMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   // Resizable form panel width (px). Drag the handle to change.
   const [formWidth, setFormWidth] = useState(480);
@@ -176,7 +369,8 @@ export default function ControllerApp() {
 
   // Measure preview pane and compute CSS scale so site renders at 1280px then shrinks to fit
   useEffect(() => {
-    if (!previewVisible) return;
+    if (!previewVisible && !isMobile) return;
+    if (isMobile && mobileView !== 'preview') return;
     const el = previewPaneRef.current;
     if (!el) return;
     const SITE_WIDTH = 1280;
@@ -188,7 +382,7 @@ export default function ControllerApp() {
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [previewVisible, formWidth]);
+  }, [previewVisible, formWidth, isMobile, mobileView]);
 
   // Drag-to-resize the form panel
   const onDragMouseDown = useCallback((e: React.MouseEvent) => {
@@ -304,7 +498,7 @@ export default function ControllerApp() {
 
   return (
     <div style={{
-      display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw',
+      display: 'flex', flexDirection: 'column', height: '100dvh', maxHeight: '100dvh', width: '100%', maxWidth: '100vw',
       background: C.bg, color: C.text, fontFamily: C.fontSans, overflow: 'hidden',
     }}>
       {/* Hidden file input for import */}
@@ -312,6 +506,7 @@ export default function ControllerApp() {
 
       {/* ── TOP BAR ── */}
       <TopBar
+        isMobile={isMobile}
         isDirty={isDirty}
         onSave={handleSave}
         onExport={handleExport}
@@ -322,16 +517,22 @@ export default function ControllerApp() {
         onDiscard={handleDiscard}
         previewVisible={previewVisible}
         setPreviewVisible={setPreviewVisible}
+        mobileView={mobileView}
+        setMobileView={setMobileView}
+        drawerOpen={drawerOpen}
+        setDrawerOpen={setDrawerOpen}
+        moreMenuOpen={moreMenuOpen}
+        setMoreMenuOpen={setMoreMenuOpen}
       />
 
       {/* ── CONFIRM RESET BANNER ── */}
       {confirmReset && (
         <div style={{
           background: `${C.danger}20`, borderBottom: `1px solid ${C.danger}40`,
-          padding: '10px 20px', display: 'flex', alignItems: 'center', gap: '12px',
-          fontSize: '0.82rem',
+          padding: isMobile ? '10px 14px' : '10px 20px', display: 'flex', alignItems: 'center', gap: '10px',
+          flexWrap: 'wrap', fontSize: '0.82rem',
         }}>
-          <span style={{ color: C.danger, fontWeight: '700' }}>⚠ This will erase all edits and restore default content.</span>
+          <span style={{ color: C.danger, fontWeight: '700', flex: isMobile ? '1 1 100%' : 'none' }}>⚠ This will erase all edits and restore default content.</span>
           <button onClick={handleReset} style={{ background: C.danger, border: 'none', color: '#FFF', padding: '6px 14px', borderRadius: '4px', cursor: 'pointer', fontWeight: '700', fontSize: '0.78rem' }}>
             Yes, Reset Everything
           </button>
@@ -343,22 +544,22 @@ export default function ControllerApp() {
 
       {/* ── IMPORT MESSAGES ── */}
       {importError && (
-        <div style={{ background: `${C.danger}20`, borderBottom: `1px solid ${C.danger}40`, padding: '10px 20px', fontSize: '0.82rem', color: C.danger, display: 'flex', justifyContent: 'space-between' }}>
-          {importError}
-          <button onClick={() => setImportError('')} style={{ background: 'none', border: 'none', color: C.textMuted, cursor: 'pointer' }}>✕</button>
+        <div style={{ background: `${C.danger}20`, borderBottom: `1px solid ${C.danger}40`, padding: isMobile ? '10px 14px' : '10px 20px', fontSize: '0.82rem', color: C.danger, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', flexWrap: 'wrap', wordBreak: 'break-word' }}>
+          <span style={{ flex: 1 }}>{importError}</span>
+          <button onClick={() => setImportError('')} style={{ background: 'none', border: 'none', color: C.textMuted, cursor: 'pointer', fontSize: '1rem' }}>✕</button>
         </div>
       )}
       {importSuccess && (
-        <div style={{ background: `${C.success}20`, borderBottom: `1px solid ${C.success}40`, padding: '10px 20px', fontSize: '0.82rem', color: C.success }}>
+        <div style={{ background: `${C.success}20`, borderBottom: `1px solid ${C.success}40`, padding: isMobile ? '10px 14px' : '10px 20px', fontSize: '0.82rem', color: C.success, wordBreak: 'break-word' }}>
           ✓ {importSuccess}
         </div>
       )}
 
       {/* ── API ERROR BANNER ── */}
       {lastError && (
-        <div style={{ background: `${C.danger}20`, borderBottom: `1px solid ${C.danger}40`, padding: '10px 20px', fontSize: '0.82rem', color: C.danger, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span>⚠ {lastError}</span>
-          <button onClick={clearError} style={{ background: 'none', border: 'none', color: C.textMuted, cursor: 'pointer' }}>✕</button>
+        <div style={{ background: `${C.danger}20`, borderBottom: `1px solid ${C.danger}40`, padding: isMobile ? '10px 14px' : '10px 20px', fontSize: '0.82rem', color: C.danger, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', flexWrap: 'wrap', wordBreak: 'break-word' }}>
+          <span style={{ flex: 1 }}>⚠ {lastError}</span>
+          <button onClick={clearError} style={{ background: 'none', border: 'none', color: C.textMuted, cursor: 'pointer', fontSize: '1rem' }}>✕</button>
         </div>
       )}
 
@@ -384,26 +585,68 @@ export default function ControllerApp() {
         </div>
       )}
 
-      {/* ── THREE-PANE BODY ── */}
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+      {/* ── RESPONSIVE BODY ── */}
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
 
-        {/* LEFT SIDEBAR */}
+        {/* MOBILE BACKDROP FOR DRAWER */}
+        {isMobile && drawerOpen && (
+          <div
+            onClick={() => setDrawerOpen(false)}
+            style={{
+              position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)',
+              backdropFilter: 'blur(2px)', zIndex: 900,
+            }}
+          />
+        )}
+
+        {/* SIDEBAR (Slide-over drawer on mobile, left column on desktop) */}
         <nav style={{
-          width: '220px', flexShrink: 0,
-          background: C.surface, borderRight: `1px solid ${C.border}`,
-          overflowY: 'auto', padding: '12px 8px',
+          ...(isMobile ? {
+            position: 'fixed', top: 0, left: 0, bottom: 0,
+            width: 'min(280px, 82vw)', zIndex: 901,
+            transform: drawerOpen ? 'translateX(0)' : 'translateX(-100%)',
+            transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+            boxShadow: drawerOpen ? '8px 0 32px rgba(0,0,0,0.85)' : 'none',
+            borderRight: `1px solid ${C.border}`,
+          } : {
+            width: '220px', flexShrink: 0,
+            borderRight: `1px solid ${C.border}`,
+          }),
+          background: C.surface,
+          overflowY: 'auto', padding: isMobile ? '16px 12px' : '12px 8px',
           display: 'flex', flexDirection: 'column', gap: '2px',
         }}>
+          {isMobile && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', padding: '0 4px' }}>
+              <span style={{ fontFamily: C.fontDisplay, fontSize: '1rem', color: C.text, letterSpacing: '0.08em' }}>SECTIONS</span>
+              <button
+                onClick={() => setDrawerOpen(false)}
+                aria-label="Close sections"
+                style={{ background: 'transparent', border: 'none', color: C.textMuted, fontSize: '1.2rem', cursor: 'pointer', padding: '4px' }}
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
           {SECTIONS.map(sec => (
             <button
               key={sec.key}
-              onClick={() => setActiveSection(sec.key)}
+              onClick={() => {
+                setActiveSection(sec.key);
+                if (isMobile) {
+                  setDrawerOpen(false);
+                  setMobileView('editor');
+                }
+              }}
               style={{
                 display: 'flex', alignItems: 'center', gap: '10px',
-                padding: '10px 12px', borderRadius: '6px', border: 'none',
+                padding: isMobile ? '12px 14px' : '10px 12px',
+                borderRadius: '6px', border: 'none',
                 background: activeSection === sec.key ? C.accentDim : 'transparent',
                 color: activeSection === sec.key ? C.accent : C.textMuted,
-                cursor: 'pointer', fontFamily: C.fontSans, fontSize: '0.82rem',
+                cursor: 'pointer', fontFamily: C.fontSans,
+                fontSize: isMobile ? '0.88rem' : '0.82rem',
                 fontWeight: activeSection === sec.key ? '700' : '500',
                 textAlign: 'left', width: '100%', transition: 'all 0.15s',
                 borderLeft: `2px solid ${activeSection === sec.key ? C.accent : 'transparent'}`,
@@ -423,31 +666,53 @@ export default function ControllerApp() {
         </nav>
 
         {/* MAIN FORM PANEL */}
-        <div style={{
-          width: previewVisible ? `${formWidth}px` : undefined,
-          flex: previewVisible ? '0 0 auto' : 1,
-          minWidth: previewVisible ? '300px' : 0,
-          overflowY: 'auto', padding: '28px 32px',
-        }}>
-          {/* Section title */}
-          <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: `1px solid ${C.border}` }}>
-            <h2 style={{
-              fontFamily: C.fontDisplay, fontSize: '1.4rem', color: C.text,
-              textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0,
-            }}>
-              {SECTIONS.find(s => s.key === activeSection)?.label}
-            </h2>
-            <div style={{ fontSize: '0.72rem', color: C.textMuted, marginTop: '4px' }}>
-              Changes sync to the preview in real time. Click <strong style={{ color: C.text }}>SAVE</strong> to publish to the live site.
+        {(!isMobile || mobileView === 'editor') && (
+          <div style={{
+            width: !isMobile && previewVisible ? `${formWidth}px` : undefined,
+            flex: !isMobile && previewVisible ? '0 0 auto' : 1,
+            minWidth: !isMobile && previewVisible ? '300px' : 0,
+            overflowY: 'auto',
+            padding: isMobile ? '16px 14px' : '28px 32px',
+          }}>
+            {/* Quick Section Switcher chip on mobile */}
+            {isMobile && (
+              <button
+                onClick={() => setDrawerOpen(true)}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  width: '100%', padding: '9px 12px', marginBottom: '16px',
+                  background: 'rgba(107,155,208,0.08)', border: `1px solid ${C.accent}40`,
+                  borderRadius: '6px', color: C.accent, fontSize: '0.78rem',
+                  cursor: 'pointer', fontFamily: C.fontSans, fontWeight: '600',
+                }}
+              >
+                <span>Section: <strong style={{ color: C.text }}>{SECTIONS.find(s => s.key === activeSection)?.label}</strong></span>
+                <span style={{ fontSize: '0.72rem', color: C.accent }}>Change ▾</span>
+              </button>
+            )}
+
+            {/* Section title */}
+            <div style={{ marginBottom: isMobile ? '16px' : '24px', paddingBottom: isMobile ? '12px' : '16px', borderBottom: `1px solid ${C.border}` }}>
+              <h2 style={{
+                fontFamily: C.fontDisplay, fontSize: isMobile ? '1.2rem' : '1.4rem', color: C.text,
+                textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0,
+              }}>
+                {SECTIONS.find(s => s.key === activeSection)?.label}
+              </h2>
+              <div style={{ fontSize: '0.72rem', color: C.textMuted, marginTop: '4px' }}>
+                {isMobile
+                  ? 'Changes update live in preview. Tap SAVE to publish.'
+                  : <>Changes sync to the preview in real time. Click <strong style={{ color: C.text }}>SAVE</strong> to publish to the live site.</>}
+              </div>
             </div>
+
+            {/* Active section editor */}
+            {SectionEditor && <SectionEditor />}
           </div>
+        )}
 
-          {/* Active section editor */}
-          {SectionEditor && <SectionEditor />}
-        </div>
-
-        {/* DRAG HANDLE */}
-        {previewVisible && (
+        {/* DRAG HANDLE (Desktop only) */}
+        {!isMobile && previewVisible && (
           <div
             onMouseDown={onDragMouseDown}
             style={{
@@ -461,20 +726,33 @@ export default function ControllerApp() {
         )}
 
         {/* RIGHT PREVIEW PANE */}
-        {previewVisible && (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+        {((!isMobile && previewVisible) || (isMobile && mobileView === 'preview')) && (
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0, width: isMobile ? '100%' : undefined }}>
             {/* Preview header */}
             <div style={{
               display: 'flex', alignItems: 'center', gap: '8px',
-              padding: '8px 16px', background: C.surface, borderBottom: `1px solid ${C.border}`,
+              padding: '8px 14px', background: C.surface, borderBottom: `1px solid ${C.border}`,
               fontSize: '0.72rem', color: C.textMuted, flexShrink: 0,
             }}>
-              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.success }} />
-              Live Preview
-              <span style={{ marginLeft: '8px', opacity: 0.5 }}>
-                {Math.round(previewScale * 100)}% — {Math.round(1280 * previewScale)}px
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.success, flexShrink: 0 }} />
+              <span style={{ fontWeight: '600', color: C.text }}>Live Preview</span>
+              <span style={{ marginLeft: '4px', opacity: 0.6 }}>
+                {Math.round(previewScale * 100)}%
               </span>
-              <span style={{ marginLeft: 'auto', opacity: 0.5 }}>Updates instantly as you type</span>
+              {isMobile ? (
+                <button
+                  onClick={() => setMobileView('editor')}
+                  style={{
+                    marginLeft: 'auto', background: C.accentDim, border: `1px solid ${C.accent}40`,
+                    color: C.accent, borderRadius: '4px', padding: '3px 8px',
+                    fontSize: '0.7rem', fontWeight: '700', cursor: 'pointer', fontFamily: C.fontSans,
+                  }}
+                >
+                  ‹ Edit Form
+                </button>
+              ) : (
+                <span style={{ marginLeft: 'auto', opacity: 0.5 }}>Updates instantly as you type</span>
+              )}
             </div>
 
             {/* Scaled preview container — site renders at 1280px then scales to fit */}
@@ -482,7 +760,6 @@ export default function ControllerApp() {
               ref={previewPaneRef}
               style={{
                 flex: 1, overflow: 'hidden', position: 'relative',
-                // transform containing block for fixed-position Navbar (also set in PreviewPane.tsx)
               }}
             >
               <div style={{

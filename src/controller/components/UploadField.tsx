@@ -194,7 +194,7 @@ export function UploadField({
           placeholder={isPdf ? '/path/to/file.pdf or Blob URL' : '/path/to/image.png or Blob URL'}
           disabled={isUploading}
           style={{
-            flex: 1, background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.border}`,
+            flex: 1, minWidth: 0, background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.border}`,
             borderRadius: '4px', padding: '6px 10px', color: C.text, fontSize: '0.78rem',
             fontFamily: C.fontSans, outline: 'none',
           }}
