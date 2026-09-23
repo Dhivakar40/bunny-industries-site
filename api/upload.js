@@ -66,13 +66,15 @@ export default async function handler(req, res) {
           throw new Error(`File type .${ext} is not allowed. Allowed: ${allowed.join(', ')}`);
         }
 
-        // Allow files up to 20 MB
+        // Allow files up to 20 MB; allowOverwrite lets the controller
+        // replace an existing blob at the same pathname (e.g. flight.jpeg).
         return {
           allowedContentTypes: [
             'image/png', 'image/jpeg', 'image/svg+xml', 'image/webp',
             'application/pdf',
           ],
           maximumSizeInBytes: 20 * 1024 * 1024, // 20 MB
+          allowOverwrite: true,
           tokenPayload: JSON.stringify({ uploadedAt: new Date().toISOString() }),
         };
       },
