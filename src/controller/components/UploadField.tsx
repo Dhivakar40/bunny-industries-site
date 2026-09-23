@@ -71,9 +71,9 @@ export function UploadField({
         access: 'public',
         handleUploadUrl: `${API_BASE}/api/upload`,
         clientPayload: '', // no extra payload needed
-        allowOverwrite: true,
         onUploadProgress: ({ percentage }) => setProgress(percentage),
         // Pass the API secret so the server can authorize the token request
+        // Note: allowOverwrite is configured server-side in api/upload.js
         headers: { Authorization: `Bearer ${API_SECRET}` },
       } as Parameters<typeof upload>[2]);
 
